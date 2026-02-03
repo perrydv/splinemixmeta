@@ -35,11 +35,11 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
     mf <- model.frame(object)
     na.action <- object$na.action
     nm <- rownames(mf)
-    groups <- mixmeta:::getGroups(object$random, mf)
+    groups <- getGroups(object$random, mf)
     ord <- do.call(order, lapply(seq(ncol(groups)), function(i) groups[,
         i]))
     groups <- groups[ord, seq(max(1, level)), drop = FALSE]
-    allGroups <- mixmeta:::getGroups(object$random, mf)
+    allGroups <- getGroups(object$random, mf)
     allGroups <- allGroups[ord, seq(maxlevel), drop = FALSE] # added by Perry
     mf <- mf[ord, , drop = FALSE]
     y <- as.matrix(model.response(mf, "numeric"))
@@ -48,7 +48,7 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
         y <- y - offset
     X <- model.matrix(object)[ord, , drop = FALSE]
     Z <- if (level > 0L)
-      mixmeta:::getZ(object$random, mf, object$contrasts)
+      getZ(object$random, mf, object$contrasts)
     else NULL
     allZ <- Z # added by Perry
     if (!is.null(Z) && is.list(Z))
@@ -78,14 +78,14 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
     ylist <- lapply(seq(m), function(i) c(t(y[gp %in% i, ])))
     Xlist <- lapply(seq(m), function(i) X[gp %in% i, , drop = FALSE] %x%
         diag(k))
-    Zlist <- mixmeta:::getZlist(Z, nay, groups, m, k, q)
+    Zlist <- getZlist(Z, nay, groups, m, k, q)
 
-    allZlist <- mixmeta:::getZlist(allZ, nay, allGroups, m, k, allq) # added by Perry
+    allZlist <- getZlist(allZ, nay, allGroups, m, k, allq) # added by Perry
 
-    Slist <- mixmeta:::getSlist(S, nay, groups, m, k, object$control$addSlist,
+    Slist <- getSlist(S, nay, groups, m, k, object$control$addSlist,
         object$control$checkPD)
 
-    allSlist <- mixmeta:::getSlist(S, nay, allGroups, m, k, object$control$addSlist,
+    allSlist <- getSlist(S, nay, allGroups, m, k, object$control$addSlist,
         object$control$checkPD) # added by Perry.
 
     predlist <- lapply(seq(m), function(i) Xlist[[i]] %*% object$coefficients)
@@ -95,10 +95,10 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
         Psi <- Psi[seq(level)]
     ZPZlist <- if (level == 0L)
         NULL
-    else mixmeta:::getZPZlist(Zlist, nalist, Psi)
+    else getZPZlist(Zlist, nalist, Psi)
 
     allPsi <- object$Psi
-    allZPZlist <- mixmeta:::getZPZlist(allZlist, nalist, allPsi) # added by Perry
+    allZPZlist <- getZPZlist(allZlist, nalist, allPsi) # added by Perry
     # if (!is.null(ZPZlist)) {
     #     Ulist <- mapply(function(ZPZ, S) chol(ZPZ + S), ZPZlist,
     #         Slist, SIMPLIFY = FALSE)
@@ -124,21 +124,21 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
         stderr <- sqrt(diag(V))
         seqlist <- lapply(seq(length(blup)/k), function(i) c(i *
             k - k + 1, i * k))
-        blup <- mixmeta:::rbindList(lapply(seqlist, function(x) blup[x[1]:x[2],
+        blup <- rbindList(lapply(seqlist, function(x) blup[x[1]:x[2],
             ]), k)
-        V <- mixmeta:::rbindList(lapply(seqlist, function(x) mixmeta:::vechMat(V[x[1]:x[2],
+        V <- rbindList(lapply(seqlist, function(x) vechMat(V[x[1]:x[2],
             x[1]:x[2]])), k * (k + 1)/2)
-        stderr <- mixmeta:::rbindList(lapply(seqlist, function(x) stderr[x[1]:x[2]]),
+        stderr <- rbindList(lapply(seqlist, function(x) stderr[x[1]:x[2]]),
             k)
         return(list(blup, V, stderr))
     })
-    blup <- mixmeta:::rbindList(lapply(complist, "[[", 1), k)
+    blup <- rbindList(lapply(complist, "[[", 1), k)
     if (!is.null(offset) && type == "outcome")
         blup <- blup + offset
     blup <- blup[order(ord), , drop = FALSE]
-    V <- mixmeta:::rbindList(lapply(complist, "[[", 2), k * (k + 1)/2)[order(ord),
+    V <- rbindList(lapply(complist, "[[", 2), k * (k + 1)/2)[order(ord),
         , drop = FALSE]
-    stderr <- mixmeta:::rbindList(lapply(complist, "[[", 3), k)[order(ord),
+    stderr <- rbindList(lapply(complist, "[[", 3), k)[order(ord),
         , drop = FALSE]
     colnames(blup) <- colnames(stderr) <- object$lab$k
     if (!is.null(na.action)) {
