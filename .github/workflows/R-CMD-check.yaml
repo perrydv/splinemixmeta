@@ -39,6 +39,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+          cran: https://cran.r-project.org
 
       - name: Ensure ggplot2 is installed (macOS only)
         if: ${{ matrix.config.os == 'macos-latest' }}
