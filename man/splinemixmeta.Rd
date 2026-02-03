@@ -2,7 +2,7 @@
 % Please edit documentation in R/splinemixmeta.R
 \name{splinemixmeta}
 \alias{splinemixmeta}
-\title{Fit a mixed-effects meta-analysis model with inclusion of a spline term}
+\title{Fit a mixed-effects meta-analysis model with inclusion of one or more spline terms}
 \usage{
 splinemixmeta(
   smooth = NULL,
@@ -19,13 +19,63 @@ splinemixmeta(
 )
 }
 \arguments{
-\item{smooth}{A smoothing term created by \code{mgcv::s()}}
+\item{smooth}{A smoothing term created by \code{mgcv::s()}, or a list of such terms.}
 
-\item{...}{Additional arguments to be passed to \code{mixmeta::mixmeta()}}
+\item{formula}{A formula for the fixed effects part of the model.}
+
+\item{manual_fixed}{If \code{TRUE}, the fixed-effect component (if any) of any \code{smooth} terms is being manually included in the \code{formula} and hence
+should not be extracted from the \code{smooth}. Normally the "fixed-effect component" is the linear component. Hence one should either provide
+\code{smooth = s(x)} with \code{x} \emph{omitted} from \code{formula} (e.g. \code{formula = y} or \code{formula = y ~ 1}) and thus \code{manual_fixed = FALSE}, or provide \code{smooth = s(x)} with \code{x}
+\emph{included} in \code{formula} (e.g. \code{formula = y ~ x}) and \code{manual_fixed = TRUE}. The model fits should be identical but the coefficient for \code{x}
+will differ because \code{x} will be scaled differently if it was automatically extracted from the spline basis functions (i.e. with \code{manual_fixed = FALSE}).}
+
+\item{residual_re}{If \code{TRUE}, a datum-level random effect for residual variation (beyond the measurement error specified by \code{se} or \code{S}) is
+automatically included (similar to the default behavior of \code{mixmeta::mixmeta()} when \code{random} is not specified). Normally this should be \code{TRUE}.}
+
+\item{data}{A data frame containing the variables in the model. If not provided, variables are sought from the where the function was called.}
+
+\item{random}{See \code{\link[mixmeta:mixmeta]{mixmeta::mixmeta()}}. This is a list of one-sided formulas specifying additional random effects beyond those that will be
+created from the \code{smooth} argument.}
+
+\item{method}{This \emph{must} be \code{reml}. It is provided as an argument to make clear that only \code{reml} is supported for estimating models
+where spline formulations are set up as random effects. This simplifies catching cases where a user might have tried to pass a different
+\code{method} value to \code{mixmeta::mixmeta()} via \code{...}.}
+
+\item{bscov}{See \code{\link[mixmeta:mixmeta]{mixmeta::mixmeta()}}. This is relevant only if \code{random} is provided.}
+
+\item{...}{Additional arguments passed to \code{mixmeta::mixmeta()}.'}
+
+\item{se:}{A vector of standard errors for the response variables.}
+
+\item{S:}{As an alternative to \code{se}, \code{S} can be provided in several formats to give variance-covariance information for the response variables.}
 }
 \value{
-An object of class \code{mixmeta}
+An object of class \code{splinemixmeta}, unless there are no \code{smooth} terms, in which case an object of class \code{mixmeta} is returned.
 }
 \description{
-Fit a mixed-effects meta-analysis model with inclusion of a spline term
+Fit a mixed-effects meta-analysis model with inclusion of one or more spline terms
+}
+\details{
+This function combines capabilities of \code{mgcv} and \code{mixmeta} in order to provide spline meta-regression, which means a meta-regression
+model where the shape of the relationship is unspecified and estimated from the data with smoothing splines. Spline components built from
+\code{mgcv} can be represented as random effects (along with fixed effects, which are unpenalized, typically for linear terms). \code{mixmeta}
+supports fairly flexible specification of fixed and random effects in (univariate or multivariate) meta-analysis regression (meta-regression)
+models. \code{splinemixmeta} takes \code{mgcv}-style specifications of smooth (spline) terms, sets them up for \code{mixmeta}, and the calls
+\code{mixmeta} to fit the model by REML.
+
+Only a limited set of \code{s} options are supported. \code{k} should work. For \code{bs}, only basis functions for which \code{smoothCon} can
+produce diagonal penalty matrices are supported (e.g. "tp", "cr", "cs", "cc"). \code{fx}, \code{m}, \code{by}, \code{id}, and \code{sp} are not supported should not
+be provided. \code{xt} should work but is untested. \code{pc} is untested.
+
+Note that \code{bs="cc"} (cyclic cubic regression spline) does not have unpenalized components, so if this is used, \code{manual_fixed} is not relevant.
+
+\code{splinemixmeta} is not particularly optimized for large data sets.
+}
+\seealso{
+\itemize{
+\item \code{\link[=predict.splinemixmeta]{predict.splinemixmeta()}} for predictions based on BLUPs (best linear unbiased predictors) from \code{\link[mixmeta:blup.mixmeta]{mixmeta::blup.mixmeta()}} from
+fitted \code{splinemixmeta} models
+\item \code{\link[=plot.splinemixmeta]{plot.splinemixmeta()}} for plotting fitted spline meta-regression models
+\item \code{\link[=make_smm_smooth]{make_smm_smooth()}} for the internal function that sets up spline terms for use in \code{splinemixmeta}.
+}
 }

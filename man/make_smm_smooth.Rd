@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_smm_smooth.R
 \name{make_smm_smooth}
 \alias{make_smm_smooth}
-\title{Create random effects and fixed effects specifications from an mgcv smooth term}
+\title{Create random effects and fixed effects specifications from an mgcv smooth term for use in \code{splinemixmeta}.}
 \usage{
 make_smm_smooth(
   smooth,
@@ -17,15 +17,31 @@ make_smm_smooth(
 
 \item{data}{Data frame containing the variables used in the smooth}
 
-\item{vnames}{"a vector of names to avoid as dummy variable names in the random effects form", per \code{help(mgcv::smooth2random)}, to which \code{vnames} is passed.}
+\item{vnames}{"a vector of names to avoid as dummy variable names in the random effects form",
+per \code{help(mgcv::smooth2random)}, to which \code{vnames} is passed.}
 
-\item{auto_fixed_effects}{If TRUE, the unpenalized dimensions of the smooth are extracted for use as fixed effects.}
+\item{manual_fixed}{If \code{FALSE}, the unpenalized dimensions of the smooth are extracted for use
+as fixed effects. If \code{TRUE}, the user should provide any desired fixed effects directly. See details.}
+
+\item{envir}{The environment in which to evaluate variable names if \code{data} is not provided.}
 }
 \value{
 A list with elements \code{basisFxns} (the basis functions for the random effects)
-and \code{x_fixed} (the fixed effects design matrix, or NULL if
-\code{auto_fixed_effects} is FALSE)
+and \code{x_fixed} (the fixed effects design matrix, or \code{NULL} if
+\code{manual_fixed} is \code{TRUE}).
 }
 \description{
-This function is for internal use.
+This function is for internal use by \code{splinemixmeta}.
+}
+\details{
+This function uses \code{mgcv::smoothCon()} and \code{mgcv::smooth2random()} to obtain basis functions, penalty matrix, and
+(optionally) fixed effects terms from the \code{smooth} specification.
+
+The fixed effects (if \code{manual_fixed} is \code{FALSE}) represent unpenalized directions of the smooth. Typically, this
+means the fixed effects will include linear terms, because splines usually penalize curvature, so any parameters
+that give a line are unpenalized. If one is not particularly interested in the linear terms (more generally, unpenalized terms),
+then the default of \code{manual_fixed = FALSE} is a good option. However, if one is interested in coefficients for the
+linear terms, it is important to note that when they are extracted from the basis function setup, they may be (typically will be)
+also re-scaled (and it is not particularly easy to determine the scaling factor). Hence, one may prefer to set \code{manual_fixed=FALSE}
+and provide the linear term directly in the \code{formula} argument to \code{splinemixmeta()}.
 }

@@ -1,19 +1,32 @@
-#' Title
+#' Plot results from a univariate `splinemixmeta` model
 #'
-#' @param object mmfit
-#' @param xvar xvar
-#' @param title title
-#' @param xlab xlab
-#' @param ylab ylab
-#' @param ylim ylim
-#' @param color color
+#' @param object object of class `mixmeta` returned from `splinemixmeta`
+#' @param xvar xvar name of variable to plot on the horizontal axis.
+#' @param title title to add to the plot
+#' @param xlab xlab label for the horizontal axis
+#' @param ylab ylab label for the vertical axis
+#' @param ylim ylim limits for the vertical axis
+#' @param linecolor color for the prediction line
+#' @param fillcolor color for the prediction confidence band
+#'
+#' @details
+#' This is not a very general plotting function. It is intended to provide a basic feature
+#' for visualizing a univariate `splinemixmeta` fit in a way that:
+#'
+#' - includes fixed effects and spline terms in the predicted values, with 95% confidence bands
+#' - Shows the data points with 95% confidence intervals obtains as +/- 2 times the standard errors (`se` or `diag(S)`).
+#' - returns a `ggplot2` object that can be further updated.
 #'
 #' @returns ggplot2 object
 #' @export
-smm_plot <- function(object, xvar, title, xlab, ylab, ylim, color = "blue") {
-  browser()
-  if(!inherits(object, "mixmeta"))
-    stop("object must be of class 'mixmeta'")
+plot.splinemixmeta <- function(object, xvar, title, xlab, ylab, ylim, linecolor = "blue", fillcolor = "blue", ...) {
+  if (!requireNamespace("ggplot2", quietly = TRUE))
+    stop(
+      "Package 'ggplot2' is required to use `plot.splinemixmeta\n",
+      call. = FALSE
+    )
+  if(!inherits(object, "splinemixmeta"))
+    stop("object must be of class 'splinemixmeta'")
   if(missing(xvar)) {
     xvar_expr <- object$formula[[3]]
     if(!is.name(xvar_expr))
@@ -23,11 +36,10 @@ smm_plot <- function(object, xvar, title, xlab, ylab, ylim, color = "blue") {
   }
   xvar <- as.character(xvar_expr)
   if(missing(xlab)) xlab <- xvar
-  pred <- predict_smm(object, include_smooths = TRUE,
-                      include_REs = FALSE, include_residuals = FALSE)
+  pred <- predict.splinemixmeta(object, ...)
   xdata <- object$model[[xvar]]
   order <- order(xdata)
-  yvar_expr <- mmfit$formula[[2]]
+  yvar_expr <- object$formula[[2]]
   if(missing(ylab)) ylab <- as.character(yvar_expr)
   ydata <- object$model[[as.character(yvar_expr)]]
   xdata <- xdata[order]
@@ -50,8 +62,8 @@ smm_plot <- function(object, xvar, title, xlab, ylab, ylim, color = "blue") {
                     ymax = mmpred_ + 2*mmse_),
                 data = df,
                 inherit.aes = FALSE,
-                fill = "blue",alpha = 0.25) +
-    ggplot2::geom_line(mapping = aesmm, data = df, inherit.aes=FALSE, color = color,linewidth=1)
+                fill = fillcolor,alpha = 0.25) +
+    ggplot2::geom_line(mapping = aesmm, data = df, inherit.aes=FALSE, color = linecolor,linewidth=1)
 
   fig <- fig + ggplot2::xlab(xlab)
   fig <- fig + ggplot2::ylab(ylab)
