@@ -9,7 +9,8 @@
   include_smooths = TRUE,
   include_REs = FALSE,
   include_residuals = FALSE,
-  type = "outcome"
+  type = "outcome",
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ variation not accounted for in the measurement variation (S). Only matters if \c
 when calling \code{splinemixmeta}, which should typically be the case. Typically one does not want these in predictions.}
 
 \item{type}{Type of predictions. This can be "outcome" or "residual" and will be passed to the \code{type} argument of \code{mixmeta::blup()}.}
+
+\item{...}{Additional arguments (currently unused)}
 }
 \value{
 A matrix with columns "blup" for the predicted values, "se" for the standard errors of the predictions,

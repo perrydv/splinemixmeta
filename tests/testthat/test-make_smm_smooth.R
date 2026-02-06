@@ -1,47 +1,47 @@
 test_that("make_smm_smooth works (simple, univariate)", {
   sTerm <- mgcv::s(x, k = 5)
   x <- rnorm(30)
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = TRUE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
   expect_equal(dim(ssm_smooth$x_fixed), c(30, 1))
   # last arg FALSE
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = FALSE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
-  expect_true(is.null(ssm_smooth$x_fixed))
+  # expect_true(is.null(ssm_smooth$x_fixed))
   # omit data
-  ssm_smooth2 <- make_smm_smooth(sTerm, vnames = "x", auto_fixed_effects = FALSE)
+  ssm_smooth2 <- make_smm_smooth(sTerm, vnames = "x")
   expect_equal(length(ssm_smooth2), 1)
   ssm_smooth2 <- ssm_smooth2[[1]]
   expect_identical(ssm_smooth2, ssm_smooth)
 
   sTerm <- mgcv::s(x, k = 5, bs = "cr")
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = TRUE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
   expect_equal(dim(ssm_smooth$x_fixed), c(30, 1))
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = FALSE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
-  expect_true(is.null(ssm_smooth$x_fixed))
+  # expect_true(is.null(ssm_smooth$x_fixed))
 
   # cyclic spline has no unpenalized part
   sTerm <- mgcv::s(x, k = 5, bs = "cc")
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = TRUE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
   expect_equal(dim(ssm_smooth$x_fixed), c(30, 0))
-  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", auto_fixed_effects = FALSE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x")
   expect_equal(length(ssm_smooth), 1)
   ssm_smooth <- ssm_smooth[[1]]
   expect_equal(dim(ssm_smooth$basisFxns), c(30, 3))
-  expect_true(is.null(ssm_smooth$x_fixed))
+  # expect_true(is.null(ssm_smooth$x_fixed))
 })
 
 # Splitting by group should be done in mixmeta, not the s() term.
@@ -75,16 +75,16 @@ test_that("make_smm_smooth works (simple, univariate)", {
   sTerm <- mgcv::s(x, y, k = 20, bs = "tp")
   data <- list(x = x, y = y, n = 50)
   ## error because n should not be included with multiple variables
-  expect_error(ssm_smooth <- make_smm_smooth(sTerm, data = data, vnames = vnames, auto_fixed_effects = TRUE))
+  expect_error(ssm_smooth <- make_smm_smooth(sTerm, data = data, vnames = vnames))
 
   data <- data.frame(x=x, y = y)
 
-  ssm_smooth <- make_smm_smooth(sTerm, data = data, vnames = vnames, auto_fixed_effects = TRUE)
+  ssm_smooth <- make_smm_smooth(sTerm, data = data, vnames = vnames)
   expect_equal(length(ssm_smooth), 1)
   expect_equal(dim(ssm_smooth[[1]]$basisFxns), c(50, 17))
   expect_equal(dim(ssm_smooth[[1]]$x_fixed), c(50, 2))
 
-  ssm_smooth <- make_smm_smooth(sTerm, vnames = vnames, auto_fixed_effects = TRUE)
+  ssm_smooth <- make_smm_smooth(sTerm, vnames = vnames)
   expect_equal(length(ssm_smooth), 1)
   expect_equal(dim(ssm_smooth[[1]]$basisFxns), c(50, 17))
   expect_equal(dim(ssm_smooth[[1]]$x_fixed), c(50, 2))
