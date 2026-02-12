@@ -8,7 +8,8 @@
 #'   variation not accounted for in the measurement variation (S). Only matters if `residual_re = TRUE`
 #'   when calling `splinemixmeta`, which should typically be the case. Typically one does not want these in predictions.
 #' @param type Type of predictions. This can be "outcome" or "residual" and will be passed to the `type` argument of `mixmeta::blup()`.
-#'
+#' @param ... Additional arguments (currently unused)
+#' 
 #' @returns A matrix with columns "blup" for the predicted values, "se" for the standard errors of the predictions,
 #'   and "vcov" for the variance of the predictions. These are returned from `mixmeta::blup()` with `vcov=TRUE` and `se=TRUE`.
 #'
@@ -16,9 +17,11 @@
 #'  of the fitted mixmeta object correspond to which parts of the model. For more fine-grained control (such as including one spline
 #'  term but not another), one can use `mixmeta::blup()` directly.
 #'
+#' @method predict splinemixmeta
+#' 
 #' @export
 predict.splinemixmeta <- function(object, include_smooths = TRUE,
-                        include_REs = FALSE, include_residuals = FALSE, type = "outcome") {
+                        include_REs = FALSE, include_residuals = FALSE, type = "outcome", ...) {
   if(!inherits(object, "splinemixmeta"))
     stop("object must be of class 'splinemixmeta'")
   level <- 0

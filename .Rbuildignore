@@ -1,2 +1,8 @@
 ^splinemixmeta\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^CODE_OF_CONDUCT\.md$

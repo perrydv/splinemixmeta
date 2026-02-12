@@ -1,14 +1,38 @@
 Package: splinemixmeta
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Title: Additive Mixed Meta-Analysis with Spline Meta-Regression
+Version: 1.0.0
+Authors@R: c(
+    person(given = "Perry",
+      family = "de Valpine",
+      role = c("aut", "cre"),
+      email = "pdevalpine@berkeley.edu",
+      comment = c(ORCID = "0000-0002-8329-6796")
+    ),
+    person(given = "Marcus",
+      family = "Beck",
+      role = c("aut"),
+      email = "mbeck@tbep.org",
+      comment = c(ORCID = "0000-0002-4996-0059")
+    )
+  )
+Description: Fit additive mixed meta-analysis (AMMA) models, extending
+  the mixmeta package <https://cran.r-project.org/package=mixmeta> 
+  to allow for spline-based meta-regression. Functions combine features of 
+  mgcv <https://cran.r-project.org/package=mgcv> for building spline 
+  components and mixmeta for estimating general mixed-effects meta-analysis 
+  models.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+URL: <https://github.com/perrydv/splinemixmeta>
+BugReports: https://github.com/perrydv/splinemixmeta/issues
+Depends: 
+  R (>= 4.1)
+Imports:
+    ggplot2,
+    mgcv,
+    mixmeta
 Suggests: 
     knitr,
     rmarkdown,

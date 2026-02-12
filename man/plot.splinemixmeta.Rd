@@ -5,7 +5,7 @@
 \title{Plot results from a univariate \code{splinemixmeta} model}
 \usage{
 \method{plot}{splinemixmeta}(
-  object,
+  x,
   xvar,
   title,
   xlab,
@@ -17,7 +17,7 @@
 )
 }
 \arguments{
-\item{object}{object of class \code{mixmeta} returned from \code{splinemixmeta}}
+\item{x}{object of class \code{mixmeta} returned from \code{splinemixmeta}}
 
 \item{xvar}{xvar name of variable to plot on the horizontal axis.}
 
@@ -32,6 +32,8 @@
 \item{linecolor}{color for the prediction line}
 
 \item{fillcolor}{color for the prediction confidence band}
+
+\item{...}{additional arguments passed to \code{predict.splinemixmeta()}}
 }
 \value{
 ggplot2 object
