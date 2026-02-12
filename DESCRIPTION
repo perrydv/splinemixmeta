@@ -25,6 +25,8 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+URL: <https://github.com/perrydv/splinemixmeta>
+BugReports: https://github.com/perrydv/splinemixmeta/issues
 Depends: 
   R (>= 4.1)
 Imports:

@@ -2,3 +2,17 @@ url: https://fawda123.github.io/splinemixmeta/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:  [intro, reference, news]
+    right: [search, github]
+  components:
+    reference:
+      text: Functions
+      href: reference/index.html
+    
+articles: 
+- title: Get Started
+  navbar: ~
+  contents:
+  - splinemixmeta
