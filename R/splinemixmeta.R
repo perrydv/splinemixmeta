@@ -5,17 +5,19 @@
 #' @param se A vector of standard errors for the response variables.
 #' @param S As an alternative to `se`, `S` can be provided in several formats to give variance-covariance information for the response variables.
 #' @param manual_fixed If `TRUE`, the fixed-effect component (if any) of any `smooth` terms is being manually included in the `formula` and hence
-#'   should not be extracted from the `smooth`. Normally the "fixed-effect component" is the linear component. Hence one should either provide
+#'   should not be obtained as the unpenalized component(s) of `smooth`. Normally the "fixed-effect component" is the linear component. Hence one should either provide
 #'   `smooth = s(x)` with `x` *omitted* from `formula` (e.g. `formula = y` or `formula = y ~ 1`) and thus `manual_fixed = FALSE`, or provide `smooth = s(x)` with `x`
 #'   *included* in `formula` (e.g. `formula = y ~ x`) and `manual_fixed = TRUE`. The model fits should be identical but the coefficient for `x`
-#'   will differ because `x` will be scaled differently if it was automatically extracted from the spline basis functions (i.e. with `manual_fixed = FALSE`).
+#'   will differ because `x` will be scaled differently if it was automatically obtained from the spline basis functions (i.e. with `manual_fixed = FALSE`).
+#'   In either case, the unpenalized dimensions of the smooth term and not include in the spline random effects.
 #' @param residual_re If `TRUE`, a datum-level random effect for residual variation (beyond the measurement error specified by `se` or `S`) is
-#' automatically included (similar to the default behavior of `mixmeta::mixmeta()` when `random` is not specified). Normally this should be `TRUE`.
-#' @param data A data frame containing the variables in the model. If not provided, variables are sought from the where the function was called.
+#' automatically included (similar to the default behavior of `mixmeta::mixmeta()` when `random` is not specified). Normally this should be `TRUE` unless there is a
+#' clear reason to set it `FALSE`.
+#' @param data A data frame containing the variables in the model. If not provided, variables are sought from where the function was called.
 #' @param random See [mixmeta::mixmeta()]. This is a list of one-sided formulas specifying additional random effects beyond those that will be
-#'  created from the `smooth` argument.
+#'  created from the `smooth` argument and `residual_re`.
 #' @param method This *must* be `reml`. It is provided as an argument to make clear that only `reml` is supported for estimating models
-#'  where spline formulations are set up as random effects. This simplifies catching cases where a user might have tried to pass a different
+#'  where spline formulations are set up as random effects. This simplifies catching cases where a user might try to pass a different
 #'  `method` value to `mixmeta::mixmeta()` via `...`.
 #' @param bscov See [mixmeta::mixmeta()]. This is relevant only if `random` is provided.
 #' @param ... Additional arguments passed to `mixmeta::mixmeta()`.'
@@ -31,9 +33,11 @@
 #'  models. `splinemixmeta` takes `mgcv`-style specifications of smooth (spline) terms, sets them up for `mixmeta`, and the calls
 #'  `mixmeta` to fit the model by REML.
 #'
-#' Only a limited set of `s` options are supported. `k` should work. For `bs`, only basis functions for which `smoothCon` can
-#'  produce diagonal penalty matrices are supported (e.g. "tp", "cr", "cs", "cc"). `fx`, `m`, `by`, `id`, and `sp` are not supported should not
-#'  be provided. `xt` should work but is untested. `pc` is untested.
+#' Only a limited set of `s` arguments and options are supported. Argument `k` should work. For `bs`, supported basis functions include "cr",
+#'  "cs", and "cc". Note that the default choice `bs = "tp"` does not work well and so results in a warning. (The supported basis functions are those
+#'  for which `mgcv::smoothCon` can produce diagonal penalty matrices are supported ("cr", "cs", "cc"), with the exception of "tp".
+#'  Arguments `fx`, `m`, `by`, `id`, and `sp` are not supported should not
+#'  be provided. Argument `xt` should work but is untested. Argument `pc` is untested.
 #'
 #'  Note that `bs="cc"` (cyclic cubic regression spline) does not have unpenalized components, so if this is used, `manual_fixed` is not relevant.
 #'
@@ -41,9 +45,11 @@
 #'
 #' @seealso
 #'
-#' - [predict.splinemixmeta()] for predictions based on BLUPs (best linear unbiased predictors) from [mixmeta::blup.mixmeta()] from
-#' fitted `splinemixmeta` models
-#' - [plot.splinemixmeta()] for plotting fitted spline meta-regression models
+#' - [predict.splinemixmeta()] for predictions based on BLUPs (best linear unbiased predictors) from
+#' fitted `splinemixmeta` models. This is an S3 method that will be called from `predict(x)` where `x` is a `splinemixmeta` object.
+#' - [plot.splinemixmeta()] for plotting fitted spline meta-regression models. This is an S3 method that will be called from `plot(x)` where `x` is a `splinemixmeta` object.
+#' - [blup.splinemixmeta()] for obtaining BLUPs (best linear unbiased predictors) from fitted `splinemixmeta` models. This is used by
+#' `predict.splinemixmeta`, which is typically easier to call directly. This is an S3 method that will be called from `blup(x)` where `x` is a `splinemixmeta` object.
 #' - [make_smm_smooth()] for the internal function that sets up spline terms for use in `splinemixmeta`.
 #'
 #' @export
@@ -58,16 +64,7 @@ splinemixmeta <- function(smooth = NULL, formula, se, S=se^2, manual_fixed=FALSE
   }
   if(is.name(formula_expr))
     formula <- as.formula(paste0(formula_expr, " ~ 1"))
-  ## Next steps
-  ## To do:
-  ##  - Arrange for a user to easily determine the order of random effects terms from splines and residuals
-  ##  - Tell a user to change the order if they want to extract a different sequence of results.
-  ##. - Explain manual_fixed
-  ##. - Compare to blups from prototype version
-  ##  - Write more tests including for bivariate splines
-  ##  - fill in roxygen and make a vignette
-  ##  - Test when the formula was made in a different environment
-  ##. - mixmeta gets an error from the blup invocation within vcov
+  ##Note: mixmeta gets an error from the blup invocation within vcov
   eval_env <- new.env(parent = parent.frame())
   mixmeta_call <- input_call
   if(is.null(input_call$S)) {
@@ -91,6 +88,19 @@ splinemixmeta <- function(smooth = NULL, formula, se, S=se^2, manual_fixed=FALSE
     smooth <- list(smooth)
   }
   num_smooth <- length(smooth)
+
+  ## Check the smooth terms
+  for(i in seq_along(smooth)) {
+    s_class <- class(smooth[[i]]) # typically a single element like "cr.smooth.spec", but we'll code as if it could have a vector of class tags.
+    if(!any(grepl("smooth.spec", s_class, fixed=TRUE)))
+      stop("'smooth' (or each element of 'smooth') must be a smooth specification returned from mgcv::s().")
+    if(!any(s_class %in% c("cr.smooth.spec", "cs.smooth.spec", "cc.smooth.spec"))) {
+      if(any(s_class == "tp.smooth.spec"))
+        warning("The (default) choice of bs='tp' will run but may not produce good results. Use bs='cr', 'cs', or 'cc' instead.")
+      else
+        warning("The chosen 'bs' value for mgcv::s() is not supported. This will probably produce an error or invalid results, but we will let it run so you can find out.")
+    }
+  }
 
   if(method != "reml")
     stop("Only 'reml' method is supported. The argument is included in this function in order to match mixmeta()'s arguments after 'smooth'.")
@@ -126,7 +136,6 @@ splinemixmeta <- function(smooth = NULL, formula, se, S=se^2, manual_fixed=FALSE
   missing_data <- missing(data)
   names_data <- if(missing_data) "" else names(data)
 
-  # browser()
   # Determine number of rows in data
   # Assume the formula is a Y name or has a Y name on the LHS
 
@@ -163,9 +172,6 @@ splinemixmeta <- function(smooth = NULL, formula, se, S=se^2, manual_fixed=FALSE
                                            "smooth_grouping",
                                            paste0("all_", random_name(4))))
   eval_env[[allname]] <- as.factor(rep(allname, nrow_data))
-
-  # Versions of fits needed for later potential blup and prediction requests:
-  # mmfit model
 
   smooth_random <- list()
   smooth_bscov <- character()
@@ -211,7 +217,6 @@ splinemixmeta <- function(smooth = NULL, formula, se, S=se^2, manual_fixed=FALSE
   mixmeta_call$bscov <- bscov
   mixmeta_call$formula <- formula
   environment(mixmeta_call$formula) <- eval_env
-  # browser()
 
   mmfit <- eval(mixmeta_call, envir = eval_env)
   mmfit$num_smooth <- num_smooth

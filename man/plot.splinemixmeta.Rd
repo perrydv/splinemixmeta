@@ -19,15 +19,16 @@
 \arguments{
 \item{x}{object of class \code{mixmeta} returned from \code{splinemixmeta}}
 
-\item{xvar}{xvar name of variable to plot on the horizontal axis.}
+\item{xvar}{name of the variable to plot on the horizontal axis. If missing, this will
+will be taken from the right side of the fixed effects formula.}
 
-\item{title}{title to add to the plot}
+\item{title}{to add to the plot}
 
-\item{xlab}{xlab label for the horizontal axis}
+\item{xlab}{label for the horizontal axis}
 
-\item{ylab}{ylab label for the vertical axis}
+\item{ylab}{label for the vertical axis}
 
-\item{ylim}{ylim limits for the vertical axis}
+\item{ylim}{limits for the vertical axis}
 
 \item{linecolor}{color for the prediction line}
 
@@ -36,7 +37,7 @@
 \item{...}{additional arguments passed to \code{predict.splinemixmeta()}}
 }
 \value{
-ggplot2 object
+\code{ggplot2} object
 }
 \description{
 Plot results from a univariate \code{splinemixmeta} model
@@ -46,7 +47,12 @@ This is not a very general plotting function. It is intended to provide a basic 
 for visualizing a univariate \code{splinemixmeta} fit in a way that:
 \itemize{
 \item includes fixed effects and spline terms in the predicted values, with 95\% confidence bands
-\item Shows the data points with 95\% confidence intervals obtains as +/- 2 times the standard errors (\code{se} or \code{diag(S)}).
+\item Shows the data points with 95\% confidence intervals obtained as +/- 2 times the standard errors (\code{se} or \code{diag(S)}).
 \item returns a \code{ggplot2} object that can be further updated.
 }
+
+If the \code{x} object comes from a call to \code{\link[=splinemixmeta]{splinemixmeta()}} that had a simple (fixed effects) \code{formula}, such as \code{y ~ w}, then
+\code{xvar} does not need to be provided, since it is easily determined to be \code{w}. However, if the
+formula was more complicated, or if \code{w} was not provided in \code{formula} because \code{manual_fixed = FALSE} (the default),
+then \code{xvar = "w"} must be provided so that this plotting function knows what to put on the horizontal axis.
 }

@@ -26,7 +26,6 @@ test_that("splinemixmeta perfectly passes through to mixmeta if no smooth is spe
 
 test_that("splinemixmeta works with a simple smooth in one x", {
   sim_data <- sim_basic_meta()
-#debug(mixmeta::mixmeta)
   # y provided as a name, not a formula
   res_splinemixA <- splinemixmeta(smooth = mgcv::s(x, k = 7, bs ="cr"), y, data = sim_data, S = sim_data$S)
   # y ~ 1 provided as formula
@@ -90,27 +89,19 @@ test_that("splinemixmeta works with two smooths", {
   expect_true(abs(coef(lmcheck)[2] - 1.0) < 0.03)
 })
 
-test_that("splinemixmeta works with bs='tp'", {
+test_that("splinemixmeta warns on bs='tp' and errors on a 'te' case", {
   set.seed(1)
   sim_data <- sim_data_for_two_splines(x = as.numeric(1:8), y = as.numeric(1:8))
 
-  smm1 <- splinemixmeta(smooth = mgcv::s(x, y, k = 10, bs ="tp"),
+  expect_warning(smm1 <- splinemixmeta(smooth = mgcv::s(x, y, k = 10, bs ="tp"),
                         z ~ 1,
                         data = sim_data,
-                        S = sim_data$S)
+                        S = sim_data$S))
 
-  expect_true(inherits(smm1, "splinemixmeta"))
-  pred <- predict(smm1)
-  res <- sim_data$z - pred[,'blup']
-
-  pred2 <- predict(smm1, type = "residual")
-  predfix <- predict(smm1, include_smooths=FALSE)
-  res2 <- sim_data$z - (predfix[,'blup'] + pred2[,'blup'])
-  expect_equal(res, res2)
-
-  expect_true(sd(res) < 1)
-  lmcheck <- lm(sim_data$z ~ I(pred[,'blup']))
-  expect_true(abs(coef(lmcheck)[2] - 1.0) < 0.03)
+  expect_error(expect_warning(smm1 <- splinemixmeta(smooth = mgcv::te(x, y, k = 7, bs ="cr"),
+                                       z ~ 1,
+                                       data = sim_data,
+                                       S = sim_data$S)))
 })
 
 # Original prototype that led to splinemixmeta, used as reference in the SFB30AO test below.

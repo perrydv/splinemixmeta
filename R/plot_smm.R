@@ -1,11 +1,12 @@
 #' Plot results from a univariate `splinemixmeta` model
 #'
 #' @param x object of class `mixmeta` returned from `splinemixmeta`
-#' @param xvar xvar name of variable to plot on the horizontal axis.
-#' @param title title to add to the plot
-#' @param xlab xlab label for the horizontal axis
-#' @param ylab ylab label for the vertical axis
-#' @param ylim ylim limits for the vertical axis
+#' @param xvar name of the variable to plot on the horizontal axis. If missing, this will
+#' will be taken from the right side of the fixed effects formula.
+#' @param title to add to the plot
+#' @param xlab label for the horizontal axis
+#' @param ylab label for the vertical axis
+#' @param ylim limits for the vertical axis
 #' @param linecolor color for the prediction line
 #' @param fillcolor color for the prediction confidence band
 #' @param ... additional arguments passed to `predict.splinemixmeta()`
@@ -15,12 +16,17 @@
 #' for visualizing a univariate `splinemixmeta` fit in a way that:
 #'
 #' - includes fixed effects and spline terms in the predicted values, with 95% confidence bands
-#' - Shows the data points with 95% confidence intervals obtains as +/- 2 times the standard errors (`se` or `diag(S)`).
+#' - Shows the data points with 95% confidence intervals obtained as +/- 2 times the standard errors (`se` or `diag(S)`).
 #' - returns a `ggplot2` object that can be further updated.
 #'
+#' If the `x` object comes from a call to [splinemixmeta()] that had a simple (fixed effects) `formula`, such as `y ~ w`, then
+#' `xvar` does not need to be provided, since it is easily determined to be `w`. However, if the
+#' formula was more complicated, or if `w` was not provided in `formula` because `manual_fixed = FALSE` (the default),
+#' then `xvar = "w"` must be provided so that this plotting function knows what to put on the horizontal axis.
+#'
 #' @method plot splinemixmeta
-#' 
-#' @returns ggplot2 object
+#'
+#' @returns `ggplot2` object
 #' @export
 plot.splinemixmeta <- function(x, xvar, title, xlab, ylab, ylim, linecolor = "blue", fillcolor = "blue", ...) {
 

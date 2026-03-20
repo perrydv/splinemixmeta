@@ -15,13 +15,14 @@ make_smm_smooth(
 \arguments{
 \item{smooth}{A term created by \code{mgcv::s()}}
 
-\item{data}{Data frame containing the variables used in the smooth}
+\item{data}{Data frame containing the variables used in the smooth. See \code{envir}.}
 
 \item{vnames}{"a vector of names to avoid as dummy variable names in the random effects form",
-per \code{help(mgcv::smooth2random)}, to which \code{vnames} is passed.}
+per \code{\link[mgcv:smooth2random]{mgcv::smooth2random()}}, to which \code{vnames} is passed.}
 
-\item{manual_fixed}{If \code{FALSE}, the unpenalized dimensions of the smooth are extracted for use
-as fixed effects. If \code{TRUE}, the user should provide any desired fixed effects directly. See details.}
+\item{manual_fixed}{If \code{FALSE}, the unpenalized dimensions (typically a linear term) of the smooth are used
+as fixed effects. If \code{TRUE}, the user should provide any desired fixed effects directly. In either case,
+unpenalized dimensions of the smooth term are not included in the spline. See details.}
 
 \item{envir}{The environment in which to evaluate variable names if \code{data} is not provided.}
 }
@@ -31,7 +32,7 @@ and \code{x_fixed} (the fixed effects design matrix, or \code{NULL} if
 \code{manual_fixed} is \code{TRUE}).
 }
 \description{
-This function is for internal use by \code{splinemixmeta}.
+This function is for internal use by \code{\link[=splinemixmeta]{splinemixmeta()}}.
 }
 \details{
 This function uses \code{mgcv::smoothCon()} and \code{mgcv::smooth2random()} to obtain basis functions, penalty matrix, and
@@ -42,6 +43,6 @@ means the fixed effects will include linear terms, because splines usually penal
 that give a line are unpenalized. If one is not particularly interested in the linear terms (more generally, unpenalized terms),
 then the default of \code{manual_fixed = FALSE} is a good option. However, if one is interested in coefficients for the
 linear terms, it is important to note that when they are extracted from the basis function setup, they may be (typically will be)
-also re-scaled (and it is not particularly easy to determine the scaling factor). Hence, one may prefer to set \code{manual_fixed=FALSE}
+also re-scaled, and it is not particularly easy to determine the scaling factor. Hence, one may prefer to set \code{manual_fixed=FALSE}
 and provide the linear term directly in the \code{formula} argument to \code{splinemixmeta()}.
 }

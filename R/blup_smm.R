@@ -1,6 +1,6 @@
 #' Obtain predictions (BLUPs) from a `splinemixmeta` object
 #'
-#' @param object An object of class `splinemixmeta`, returned by `splinemixmeta()`.
+#' @param object An object of class `splinemixmeta`, returned by [splinemixmeta()].
 #' @param se Logical indicating whether to return standard errors of the predictions.
 #' @param pi Logical indicating whether to return prediction intervals.
 #' @param vcov Logical indicating whether to return the variance-covariance matrix of the predictions.
@@ -12,10 +12,10 @@
 #' @param ... Additional arguments (currently unused).
 #' @return A matrix or list of predicted values (BLUPs), optionally including standard errors, prediction intervals, and variance-covariance matrices.
 
-#' @details This function is modified from `mixmeta::blup.mixmeta` with acknowledgement of the original authors.
+#' @details This function is modified from [mixmeta::blup.mixmeta()] with acknowledgement of the original authors.
 #' It is modified to handle intermediate levels of random effects more carefully.
-#' This is currently a temporary solution that may be replaced in future versions.
 #'
+#' @importFrom mixmeta blup
 #' @export
 blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi.level = 0.95,
     type = "outcome", level, format, aggregate = "stat", ...)
@@ -207,3 +207,8 @@ blup.splinemixmeta <- function (object, se = FALSE, pi = FALSE, vcov = FALSE, pi
     else rownames(blup) <- nm
     blup
 }
+
+#' @importFrom mixmeta blup
+#' @export
+mixmeta::blup
+

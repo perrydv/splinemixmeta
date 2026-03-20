@@ -28,21 +28,23 @@ splinemixmeta(
 \item{S}{As an alternative to \code{se}, \code{S} can be provided in several formats to give variance-covariance information for the response variables.}
 
 \item{manual_fixed}{If \code{TRUE}, the fixed-effect component (if any) of any \code{smooth} terms is being manually included in the \code{formula} and hence
-should not be extracted from the \code{smooth}. Normally the "fixed-effect component" is the linear component. Hence one should either provide
+should not be obtained as the unpenalized component(s) of \code{smooth}. Normally the "fixed-effect component" is the linear component. Hence one should either provide
 \code{smooth = s(x)} with \code{x} \emph{omitted} from \code{formula} (e.g. \code{formula = y} or \code{formula = y ~ 1}) and thus \code{manual_fixed = FALSE}, or provide \code{smooth = s(x)} with \code{x}
 \emph{included} in \code{formula} (e.g. \code{formula = y ~ x}) and \code{manual_fixed = TRUE}. The model fits should be identical but the coefficient for \code{x}
-will differ because \code{x} will be scaled differently if it was automatically extracted from the spline basis functions (i.e. with \code{manual_fixed = FALSE}).}
+will differ because \code{x} will be scaled differently if it was automatically obtained from the spline basis functions (i.e. with \code{manual_fixed = FALSE}).
+In either case, the unpenalized dimensions of the smooth term and not include in the spline random effects.}
 
 \item{residual_re}{If \code{TRUE}, a datum-level random effect for residual variation (beyond the measurement error specified by \code{se} or \code{S}) is
-automatically included (similar to the default behavior of \code{mixmeta::mixmeta()} when \code{random} is not specified). Normally this should be \code{TRUE}.}
+automatically included (similar to the default behavior of \code{mixmeta::mixmeta()} when \code{random} is not specified). Normally this should be \code{TRUE} unless there is a
+clear reason to set it \code{FALSE}.}
 
-\item{data}{A data frame containing the variables in the model. If not provided, variables are sought from the where the function was called.}
+\item{data}{A data frame containing the variables in the model. If not provided, variables are sought from where the function was called.}
 
 \item{random}{See \code{\link[mixmeta:mixmeta]{mixmeta::mixmeta()}}. This is a list of one-sided formulas specifying additional random effects beyond those that will be
-created from the \code{smooth} argument.}
+created from the \code{smooth} argument and \code{residual_re}.}
 
 \item{method}{This \emph{must} be \code{reml}. It is provided as an argument to make clear that only \code{reml} is supported for estimating models
-where spline formulations are set up as random effects. This simplifies catching cases where a user might have tried to pass a different
+where spline formulations are set up as random effects. This simplifies catching cases where a user might try to pass a different
 \code{method} value to \code{mixmeta::mixmeta()} via \code{...}.}
 
 \item{bscov}{See \code{\link[mixmeta:mixmeta]{mixmeta::mixmeta()}}. This is relevant only if \code{random} is provided.}
@@ -63,9 +65,11 @@ supports fairly flexible specification of fixed and random effects in (univariat
 models. \code{splinemixmeta} takes \code{mgcv}-style specifications of smooth (spline) terms, sets them up for \code{mixmeta}, and the calls
 \code{mixmeta} to fit the model by REML.
 
-Only a limited set of \code{s} options are supported. \code{k} should work. For \code{bs}, only basis functions for which \code{smoothCon} can
-produce diagonal penalty matrices are supported (e.g. "tp", "cr", "cs", "cc"). \code{fx}, \code{m}, \code{by}, \code{id}, and \code{sp} are not supported should not
-be provided. \code{xt} should work but is untested. \code{pc} is untested.
+Only a limited set of \code{s} arguments and options are supported. Argument \code{k} should work. For \code{bs}, supported basis functions include "cr",
+"cs", and "cc". Note that the default choice \code{bs = "tp"} does not work well and so results in a warning. (The supported basis functions are those
+for which \code{mgcv::smoothCon} can produce diagonal penalty matrices are supported ("cr", "cs", "cc"), with the exception of "tp".
+Arguments \code{fx}, \code{m}, \code{by}, \code{id}, and \code{sp} are not supported should not
+be provided. Argument \code{xt} should work but is untested. Argument \code{pc} is untested.
 
 Note that \code{bs="cc"} (cyclic cubic regression spline) does not have unpenalized components, so if this is used, \code{manual_fixed} is not relevant.
 
@@ -73,9 +77,11 @@ Note that \code{bs="cc"} (cyclic cubic regression spline) does not have unpenali
 }
 \seealso{
 \itemize{
-\item \code{\link[=predict.splinemixmeta]{predict.splinemixmeta()}} for predictions based on BLUPs (best linear unbiased predictors) from \code{\link[mixmeta:blup.mixmeta]{mixmeta::blup.mixmeta()}} from
-fitted \code{splinemixmeta} models
-\item \code{\link[=plot.splinemixmeta]{plot.splinemixmeta()}} for plotting fitted spline meta-regression models
+\item \code{\link[=predict.splinemixmeta]{predict.splinemixmeta()}} for predictions based on BLUPs (best linear unbiased predictors) from
+fitted \code{splinemixmeta} models. This is an S3 method that will be called from \code{predict(x)} where \code{x} is a \code{splinemixmeta} object.
+\item \code{\link[=plot.splinemixmeta]{plot.splinemixmeta()}} for plotting fitted spline meta-regression models. This is an S3 method that will be called from \code{plot(x)} where \code{x} is a \code{splinemixmeta} object.
+\item \code{\link[=blup.splinemixmeta]{blup.splinemixmeta()}} for obtaining BLUPs (best linear unbiased predictors) from fitted \code{splinemixmeta} models. This is used by
+\code{predict.splinemixmeta}, which is typically easier to call directly. This is an S3 method that will be called from \code{blup(x)} where \code{x} is a \code{splinemixmeta} object.
 \item \code{\link[=make_smm_smooth]{make_smm_smooth()}} for the internal function that sets up spline terms for use in \code{splinemixmeta}.
 }
 }

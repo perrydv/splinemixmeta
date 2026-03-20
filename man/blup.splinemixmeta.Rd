@@ -4,7 +4,7 @@
 \alias{blup.splinemixmeta}
 \title{Obtain predictions (BLUPs) from a \code{splinemixmeta} object}
 \usage{
-blup.splinemixmeta(
+\method{blup}{splinemixmeta}(
   object,
   se = FALSE,
   pi = FALSE,
@@ -18,7 +18,7 @@ blup.splinemixmeta(
 )
 }
 \arguments{
-\item{object}{An object of class \code{splinemixmeta}, returned by \code{splinemixmeta()}.}
+\item{object}{An object of class \code{splinemixmeta}, returned by \code{\link[=splinemixmeta]{splinemixmeta()}}.}
 
 \item{se}{Logical indicating whether to return standard errors of the predictions.}
 
@@ -45,7 +45,6 @@ A matrix or list of predicted values (BLUPs), optionally including standard erro
 Obtain predictions (BLUPs) from a \code{splinemixmeta} object
 }
 \details{
-This function is modified from \code{mixmeta::blup.mixmeta} with acknowledgement of the original authors.
+This function is modified from \code{\link[mixmeta:blup.mixmeta]{mixmeta::blup.mixmeta()}} with acknowledgement of the original authors.
 It is modified to handle intermediate levels of random effects more carefully.
-This is currently a temporary solution that may be replaced in future versions.
 }

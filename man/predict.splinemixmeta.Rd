@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{A fitted \code{mixmeta} object returned from \code{splinemixmeta}}
+\item{object}{A fitted \code{mixmeta} object returned from \code{\link[=splinemixmeta]{splinemixmeta()}}}
 
 \item{include_smooths}{\code{TRUE} to include the smooth (spline) terms in predictions. Typically one wants these.}
 
@@ -25,7 +25,7 @@ were provided in the \code{random} argument to \code{splinemixmeta}. Omit these 
 variation not accounted for in the measurement variation (S). Only matters if \code{residual_re = TRUE}
 when calling \code{splinemixmeta}, which should typically be the case. Typically one does not want these in predictions.}
 
-\item{type}{Type of predictions. This can be "outcome" or "residual" and will be passed to the \code{type} argument of \code{mixmeta::blup()}.}
+\item{type}{Type of predictions. This can be "outcome" or "residual" and will be passed to the \code{type} argument of \code{\link[=blup.splinemixmeta]{blup.splinemixmeta()}}.}
 
 \item{...}{Additional arguments (currently unused)}
 }
@@ -37,7 +37,8 @@ and "vcov" for the variance of the predictions. These are returned from \code{mi
 Make predictions from a fitted \code{splinemixmeta} model
 }
 \details{
-This is a convenience function that calls \code{mixmeta::blup} without requiring you to know which random-effects "levels"
-of the fitted mixmeta object correspond to which parts of the model. For more fine-grained control (such as including one spline
-term but not another), one can use \code{mixmeta::blup()} directly.
+This is a convenience function that calls \code{blup} (i.e. \code{blup.splinemixmeta}) without requiring one to know which random-effects "levels"
+of the fitted mixmeta object correspond to which parts of the model. Instead one can simply choose whether to include smooths, random effects,
+and/or residuals. For more fine-grained control (such as including one spline
+term but not another), one can use \code{blup()} directly.
 }

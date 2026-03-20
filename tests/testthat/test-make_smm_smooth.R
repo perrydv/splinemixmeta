@@ -44,8 +44,6 @@ test_that("make_smm_smooth works (simple, univariate)", {
   expect_equal(dim(ssm_smooth$x_fixed), c(30, 0))
 })
 
-# Splitting by group should be done in mixmeta, not the s() term.
-
 test_that("make_smm_smooth works (univariate by factor)", {
   sTerm <- mgcv::s(x, k = 5, by = group)
   x <- rnorm(30)
@@ -72,6 +70,8 @@ test_that("make_smm_smooth works (simple, univariate)", {
   x <- rnorm(50)
   y <- rnorm(50)
   vnames <- c("x", "y")
+  # This test uses bs="tp" even though it is not recommended and is warning-trapped in splinemixmeta()
+  # But the mechanics of make_smm_smooth do run with it.
   sTerm <- mgcv::s(x, y, k = 20, bs = "tp")
   data <- list(x = x, y = y, n = 50)
   ## error because n should not be included with multiple variables
