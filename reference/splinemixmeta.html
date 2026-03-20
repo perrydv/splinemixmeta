@@ -77,29 +77,31 @@
 
 <dt id="arg-manual-fixed">manual_fixed<a class="anchor" aria-label="anchor" href="#arg-manual-fixed"></a></dt>
 <dd><p>If <code>TRUE</code>, the fixed-effect component (if any) of any <code>smooth</code> terms is being manually included in the <code>formula</code> and hence
-should not be extracted from the <code>smooth</code>. Normally the "fixed-effect component" is the linear component. Hence one should either provide
+should not be obtained as the unpenalized component(s) of <code>smooth</code>. Normally the "fixed-effect component" is the linear component. Hence one should either provide
 <code>smooth = s(x)</code> with <code>x</code> <em>omitted</em> from <code>formula</code> (e.g. <code>formula = y</code> or <code>formula = y ~ 1</code>) and thus <code>manual_fixed = FALSE</code>, or provide <code>smooth = s(x)</code> with <code>x</code>
 <em>included</em> in <code>formula</code> (e.g. <code>formula = y ~ x</code>) and <code>manual_fixed = TRUE</code>. The model fits should be identical but the coefficient for <code>x</code>
-will differ because <code>x</code> will be scaled differently if it was automatically extracted from the spline basis functions (i.e. with <code>manual_fixed = FALSE</code>).</p></dd>
+will differ because <code>x</code> will be scaled differently if it was automatically obtained from the spline basis functions (i.e. with <code>manual_fixed = FALSE</code>).
+In either case, the unpenalized dimensions of the smooth term and not include in the spline random effects.</p></dd>
 
 
 <dt id="arg-residual-re">residual_re<a class="anchor" aria-label="anchor" href="#arg-residual-re"></a></dt>
 <dd><p>If <code>TRUE</code>, a datum-level random effect for residual variation (beyond the measurement error specified by <code>se</code> or <code>S</code>) is
-automatically included (similar to the default behavior of <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta()</a></code> when <code>random</code> is not specified). Normally this should be <code>TRUE</code>.</p></dd>
+automatically included (similar to the default behavior of <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta()</a></code> when <code>random</code> is not specified). Normally this should be <code>TRUE</code> unless there is a
+clear reason to set it <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data frame containing the variables in the model. If not provided, variables are sought from the where the function was called.</p></dd>
+<dd><p>A data frame containing the variables in the model. If not provided, variables are sought from where the function was called.</p></dd>
 
 
 <dt id="arg-random">random<a class="anchor" aria-label="anchor" href="#arg-random"></a></dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta()</a></code>. This is a list of one-sided formulas specifying additional random effects beyond those that will be
-created from the <code>smooth</code> argument.</p></dd>
+created from the <code>smooth</code> argument and <code>residual_re</code>.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>This <em>must</em> be <code>reml</code>. It is provided as an argument to make clear that only <code>reml</code> is supported for estimating models
-where spline formulations are set up as random effects. This simplifies catching cases where a user might have tried to pass a different
+where spline formulations are set up as random effects. This simplifies catching cases where a user might try to pass a different
 <code>method</code> value to <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta()</a></code> via <code>...</code>.</p></dd>
 
 
@@ -123,18 +125,22 @@ model where the shape of the relationship is unspecified and estimated from the 
 supports fairly flexible specification of fixed and random effects in (univariate or multivariate) meta-analysis regression (meta-regression)
 models. <code>splinemixmeta</code> takes <code>mgcv</code>-style specifications of smooth (spline) terms, sets them up for <code>mixmeta</code>, and the calls
 <code>mixmeta</code> to fit the model by REML.</p>
-<p>Only a limited set of <code>s</code> options are supported. <code>k</code> should work. For <code>bs</code>, only basis functions for which <code>smoothCon</code> can
-produce diagonal penalty matrices are supported (e.g. "tp", "cr", "cs", "cc"). <code>fx</code>, <code>m</code>, <code>by</code>, <code>id</code>, and <code>sp</code> are not supported should not
-be provided. <code>xt</code> should work but is untested. <code>pc</code> is untested.</p>
+<p>Only a limited set of <code>s</code> arguments and options are supported. Argument <code>k</code> should work. For <code>bs</code>, supported basis functions include "cr",
+"cs", and "cc". Note that the default choice <code>bs = "tp"</code> does not work well and so results in a warning. (The supported basis functions are those
+for which <code><a href="https://rdrr.io/pkg/mgcv/man/smoothCon.html" class="external-link">mgcv::smoothCon</a></code> can produce diagonal penalty matrices are supported ("cr", "cs", "cc"), with the exception of "tp".
+Arguments <code>fx</code>, <code>m</code>, <code>by</code>, <code>id</code>, and <code>sp</code> are not supported should not
+be provided. Argument <code>xt</code> should work but is untested. Argument <code>pc</code> is untested.</p>
 <p>Note that <code>bs="cc"</code> (cyclic cubic regression spline) does not have unpenalized components, so if this is used, <code>manual_fixed</code> is not relevant.</p>
 <p><code>splinemixmeta</code> is not particularly optimized for large data sets.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="predict.splinemixmeta.html">predict.splinemixmeta()</a></code> for predictions based on BLUPs (best linear unbiased predictors) from <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.mixmeta.html" class="external-link">mixmeta::blup.mixmeta()</a></code> from
-fitted <code>splinemixmeta</code> models</p></li>
-<li><p><code><a href="plot.splinemixmeta.html">plot.splinemixmeta()</a></code> for plotting fitted spline meta-regression models</p></li>
+<ul><li><p><code><a href="predict.splinemixmeta.html">predict.splinemixmeta()</a></code> for predictions based on BLUPs (best linear unbiased predictors) from
+fitted <code>splinemixmeta</code> models. This is an S3 method that will be called from <code>predict(x)</code> where <code>x</code> is a <code>splinemixmeta</code> object.</p></li>
+<li><p><code><a href="plot.splinemixmeta.html">plot.splinemixmeta()</a></code> for plotting fitted spline meta-regression models. This is an S3 method that will be called from <code>plot(x)</code> where <code>x</code> is a <code>splinemixmeta</code> object.</p></li>
+<li><p><code><a href="blup.splinemixmeta.html">blup.splinemixmeta()</a></code> for obtaining BLUPs (best linear unbiased predictors) from fitted <code>splinemixmeta</code> models. This is used by
+<code>predict.splinemixmeta</code>, which is typically easier to call directly. This is an S3 method that will be called from <code>blup(x)</code> where <code>x</code> is a <code>splinemixmeta</code> object.</p></li>
 <li><p><code><a href="make_smm_smooth.html">make_smm_smooth()</a></code> for the internal function that sets up spline terms for use in <code>splinemixmeta</code>.</p></li>
 </ul></div>
     </div>

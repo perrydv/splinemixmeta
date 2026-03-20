@@ -87,16 +87,16 @@ resulting pieces are then set up as needed for a call to
 <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta</a></code> for estimating the model. Variance
 parameters are always estimated by REML (restricted maximum
 likelihood).</p>
-<p>There are some important limits on what will work. At the moment,
-only spline choices for which covariance matrices can be diagonalized
-are supported. One can have multiple such components. In practice, the
-only bivariate spline (i.e. not simply addition of two univariate
-splines) that could potentially work is <code>bs = 'tp'</code>, although
-currently there is an issue translating the pieces from
-<code>mgcv</code> to <code>splinemixmeta</code> for that case. It is
-possible that <code>bs = 'mrf'</code> also works, but it has not been
-tested. See <code><a href="../reference/splinemixmeta.html">help(splinemixmeta)</a></code> for more about what is
-supported.</p>
+<p>There are some important limits on what will work. At the moment, the
+only recommended spline basis functions are <code>bs="cr"</code>,
+“bs=<code>cs</code>”, and <code>bs="cc"</code>. These are supported
+because the associated covariance matrices can be diagonalized. The
+<code>mgcv</code> default of <code>bs="tp"</code> does not currently
+produce good results. One can have multiple spline components, although
+this is rather limited because most of the choices in <code>mgcv</code>
+for bivariate splines are not among those supported. It is possible that
+<code>bs = 'mrf'</code> also works, but it has not been tested. See
+<code><a href="../reference/splinemixmeta.html">help(splinemixmeta)</a></code> for more about what is supported.</p>
 <p>The estimation machinery is not particularly efficient and so may be
 notably slow for large models.</p>
 </div>
@@ -130,10 +130,12 @@ as will the spline.</p>
 <p>This data simulation has the following pieces:</p>
 <ul>
 <li>We have 10 groups of 5 data points each. Since the <code>x</code>
-values are drawn independently, the groups are randomly associated with
-<code>x</code> values.</li>
+values are all drawn independently, the groups are independent from
+<code>x</code>.</li>
 <li>
 <code>x</code> is uniformly distributed from 0 to 20.</li>
+<li>We assume each <code>y</code> was obtained separately from a
+previous study, and these studies are grouped in some relevant way.</li>
 <li>Fixed effects for <code>y</code> include an intercept and linear
 term.</li>
 <li>Random effects for <code>y</code> include the group effects.</li>
@@ -143,9 +145,9 @@ spline, treated as a random effect.</li>
 <li>Measurement errors (i.e. estimation error from the previous studies
 from which <code>y</code> were obtained) are normally distributed with
 standard deviations that are the standard errors (<code>se</code>) from
-the previous studies. These are simulated as uniformly distributed
-between 0.1 and 0.3 to show heterogeneity in the precision of previous
-studies, which be due for example to different sample sizes.</li>
+the previous studies. These standard errors are simulated as uniformly
+distributed between 0.1 and 0.3 to reflect heterogeneity in the
+precision of the previous studies.</li>
 </ul>
 </div>
 <div class="section level3">
@@ -154,8 +156,9 @@ studies, which be due for example to different sample sizes.</li>
 <p>The spline meta-regression model can be estimated like this:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">splinemixmeta</span><span class="op">)</span></span>
-<span><span class="co"># smm &lt;- splinemixmeta( mgcv::s(x), y ~ x, se = se, manual_fixed = TRUE, data = data, random = ~ 1 | group)</span></span>
-<span><span class="va">smm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splinemixmeta.html">splinemixmeta</a></span><span class="op">(</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">x</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span>, <span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, se <span class="op">=</span> <span class="va">se</span>, manual_fixed <span class="op">=</span> <span class="cn">TRUE</span>, data <span class="op">=</span> <span class="va">data</span>, random <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">smm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splinemixmeta.html">splinemixmeta</a></span><span class="op">(</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">x</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span>, <span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, </span>
+<span>                      se <span class="op">=</span> <span class="va">se</span>, manual_fixed <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                      data <span class="op">=</span> <span class="va">data</span>, random <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre></div>
 <p>The object <code>smm</code> will have class “splinemixmeta” and
 “mixmeta”. First we can look at a summary of the model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -221,23 +224,28 @@ which has a single level for every row of the data, which facilitates
 use of <code><a href="https://rdrr.io/pkg/mixmeta/man/mixmeta.html" class="external-link">mixmeta::mixmeta</a></code>. The other is called
 <code>ID</code>, which has a unique value for each row. In
 meta-regression, it can be tempting to think that the standard errors
-associated with <code>y</code> values serve as residual variation, but
-that is not typically the case. If each <code>y</code> came from a large
-sample size in the previous studies, the standard errors would be small,
-but we would still expect study-level variation around any regression
-line because the world is noisy. That study-level variation,
-i.e. residual variation, is set up as a random effect with one level for
-each <code>y</code>.</p>
+associated with <code>y</code> values serve as the only source of
+residual variation, but that is not typically the case. If each
+<code>y</code> came from a large sample size in the previous studies,
+the standard errors would be small, but we would still expect
+study-level variation around any regression line because the world is
+noisy. That study-level variation, i.e. additional residual variation,
+is set up as a random effect with one level for each <code>y</code>.</p>
 <p>By using <code>y ~ x</code>, we included a linear term for
 <code>x</code> directly (manually), and thus we needed to set
 <code>manual_fixed = TRUE</code>. Otherwise <code>splinemixmeta</code>
-would have extracted a linear term from the spline setup and included it
-in the model, and we don’t want it duplicated. In the
-<code>summary</code> output, we see the full covariance matrix from the
-spline random effect, which is the vector spline coefficients. This is
-shown as the standard deviation for each component (all the same) and
-their correlations (all 0), reflecting a covariance matrix that is a
-constant times an identity matrix.</p>
+would have obtained a linear term from the spline setup and included it
+in the model, and we don’t want it duplicated. (Such a linear term, or
+more generally unpenalized dimensions of the spline coefficients, will
+always be removed from the smooth term when it is converted into the
+format of a random effect.) In the <code>summary</code> output, we see
+the full covariance matrix from the spline random effect, which is the
+vector spline coefficients. This is shown as the standard deviation for
+each component (all the same) and their correlations (all 0), reflecting
+a covariance matrix that is a constant times an identity matrix. It has
+this structure because the random effects structure from the spline
+basis functions and penalty matrix are rotated on order to work with a
+diagonal covariance matrix.</p>
 <p>Finally we see the estimated standard deviation between groups and
 the estimated residual standard deviation, shows as the
 <code>~1 | ID</code> term.</p>
@@ -267,15 +275,13 @@ in the prediction variance (and standard errors), or “residual”, in
 which case only variance from random effects is included. The default is
 “outcome”. See <code><a href="../reference/predict.splinemixmeta.html">help(predict.splinemixmeta)</a></code> for details. Any
 further fine-grained control (such as including one spline but not
-another), can be done by calling <code>splinemixmeta::blup()</code>
+another), can be done by calling <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">splinemixmeta::blup()</a></code>
 directly.</p>
 <p>Here are two versions of predictions:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_spline_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">smm</span>, include_smooths <span class="op">=</span> <span class="cn">TRUE</span>, include_REs <span class="op">=</span> <span class="cn">FALSE</span>, include_residuals <span class="op">=</span> <span class="cn">FALSE</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span>
 <span><span class="va">pred_spline_and_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">smm</span>, include_smooths <span class="op">=</span> <span class="cn">TRUE</span>, include_REs <span class="op">=</span> <span class="cn">TRUE</span>, include_residuals <span class="op">=</span> <span class="cn">FALSE</span>, type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Need to fix case with level=0"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Need to fix case with level=0</span></span>
-<span><span class="co"># pred_fixed_only &lt;- predict(smm, include_smooths = FALSE)</span></span>
+<span><span class="co"># look at both together</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pred_spline_only</span>, <span class="va">pred_spline_and_groups</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       blup        se      vcov     blup        se      vcov</span></span>
 <span><span class="co">#&gt; 1 19.01618 0.3506960 0.1229877 18.74330 0.4357595 0.1898863</span></span>
@@ -284,7 +290,16 @@ directly.</p>
 <span><span class="co">#&gt; 4 19.25014 0.5170299 0.2673199 18.97727 0.5765052 0.3323583</span></span>
 <span><span class="co">#&gt; 5 18.31537 0.3538785 0.1252300 18.04249 0.4386054 0.1923747</span></span>
 <span><span class="co">#&gt; 6 14.81859 0.3818512 0.1458104 15.43221 0.4673896 0.2184530</span></span>
-<span><span class="co"># blup(smm, level=0, vcov = TRUE, se = TRUE)</span></span></code></pre></div>
+<span><span class="co"># look at only fixed effect, which could be done with `predict`</span></span>
+<span><span class="co"># but here we illustrate a direct call to `blup`</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">blup</a></span><span class="op">(</span><span class="va">smm</span>, level<span class="op">=</span><span class="fl">0</span>, vcov <span class="op">=</span> <span class="cn">TRUE</span>, se <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       blup        se       vcov</span></span>
+<span><span class="co">#&gt; 1 17.52867 0.2001708 0.04006835</span></span>
+<span><span class="co">#&gt; 2 14.80961 0.1982734 0.03931235</span></span>
+<span><span class="co">#&gt; 3 14.06172 0.2192172 0.04805620</span></span>
+<span><span class="co">#&gt; 4 20.57627 0.3187314 0.10158973</span></span>
+<span><span class="co">#&gt; 5 17.33722 0.1958174 0.03834447</span></span>
+<span><span class="co">#&gt; 6 13.54724 0.2373041 0.05631323</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="figures">Figures<a class="anchor" aria-label="anchor" href="#figures"></a>
@@ -292,8 +307,13 @@ directly.</p>
 <p><code>splinemixmeta</code> provides a basic capability for figures,
 for which the suggested package <code>ggplot2</code> is needed.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">smm</span>, xvar <span class="op">=</span> <span class="va">x</span>, xlab <span class="op">=</span> <span class="st">"x"</span>, ylab <span class="op">=</span> <span class="st">"y"</span>, title <span class="op">=</span> <span class="st">"Spline meta-regression fit"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">smm</span>, ylab <span class="op">=</span> <span class="st">"y"</span>, title <span class="op">=</span> <span class="st">"Spline meta-regression fit"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="splinemixmeta_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="576"></p>
+<p>In this figure, the <code>y</code> values are shown with approximate
+95% confidence intervals calculated as +/- 2 standard errors, from the
+standard errors that were input as the <code>se</code> argument to
+<code>splinemixmeta</code>. The fitted line by default includes fixed
+effects and spline terms (blups), with a 95% confidence envelope.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -26,14 +26,14 @@ The resulting pieces are then set up as needed for a call to
 estimating the model. Variance parameters are always estimated by REML
 (restricted maximum likelihood).
 
-There are some important limits on what will work. At the moment, only
-spline choices for which covariance matrices can be diagonalized are
-supported. One can have multiple such components. In practice, the only
-bivariate spline (i.e. not simply addition of two univariate splines)
-that could potentially work is `bs = 'tp'`, although currently there is
-an issue translating the pieces from `mgcv` to `splinemixmeta` for that
-case. It is possible that `bs = 'mrf'` also works, but it has not been
-tested. See
+There are some important limits on what will work. At the moment, the
+only recommended spline basis functions are `bs="cr"`, “bs=`cs`”, and
+`bs="cc"`. These are supported because the associated covariance
+matrices can be diagonalized. The `mgcv` default of `bs="tp"` does not
+currently produce good results. One can have multiple spline components,
+although this is rather limited because most of the choices in `mgcv`
+for bivariate splines are not among those supported. It is possible that
+`bs = 'mrf'` also works, but it has not been tested. See
 [`help(splinemixmeta)`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
 for more about what is supported.
 
@@ -70,10 +70,11 @@ plot(y ~ x, data = data, col = group, pch = 19, main = "Simulated data (color = 
 
 This data simulation has the following pieces:
 
-- We have 10 groups of 5 data points each. Since the `x` values are
-  drawn independently, the groups are randomly associated with `x`
-  values.
+- We have 10 groups of 5 data points each. Since the `x` values are all
+  drawn independently, the groups are independent from `x`.
 - `x` is uniformly distributed from 0 to 20.
+- We assume each `y` was obtained separately from a previous study, and
+  these studies are grouped in some relevant way.
 - Fixed effects for `y` include an intercept and linear term.
 - Random effects for `y` include the group effects.
 - The sinusoidal term for `y` will be estimated as a spline, treated as
@@ -82,9 +83,9 @@ This data simulation has the following pieces:
 - Measurement errors (i.e. estimation error from the previous studies
   from which `y` were obtained) are normally distributed with standard
   deviations that are the standard errors (`se`) from the previous
-  studies. These are simulated as uniformly distributed between 0.1 and
-  0.3 to show heterogeneity in the precision of previous studies, which
-  be due for example to different sample sizes.
+  studies. These standard errors are simulated as uniformly distributed
+  between 0.1 and 0.3 to reflect heterogeneity in the precision of the
+  previous studies.
 
 ### Estimation of a spline meta-regression model
 
@@ -92,8 +93,9 @@ The spline meta-regression model can be estimated like this:
 
 ``` r
 library(splinemixmeta)
-# smm <- splinemixmeta( mgcv::s(x), y ~ x, se = se, manual_fixed = TRUE, data = data, random = ~ 1 | group)
-smm <- splinemixmeta( mgcv::s(x, bs = "cr"), y ~ x, se = se, manual_fixed = TRUE, data = data, random = ~ 1 | group)
+smm <- splinemixmeta( mgcv::s(x, bs = "cr"), y ~ x, 
+                      se = se, manual_fixed = TRUE, 
+                      data = data, random = ~ 1 | group)
 ```
 
 The object `smm` will have class “splinemixmeta” and “mixmeta”. First we
@@ -165,22 +167,28 @@ single level for every row of the data, which facilitates use of
 [`mixmeta::mixmeta`](https://rdrr.io/pkg/mixmeta/man/mixmeta.html). The
 other is called `ID`, which has a unique value for each row. In
 meta-regression, it can be tempting to think that the standard errors
-associated with `y` values serve as residual variation, but that is not
-typically the case. If each `y` came from a large sample size in the
-previous studies, the standard errors would be small, but we would still
-expect study-level variation around any regression line because the
-world is noisy. That study-level variation, i.e. residual variation, is
-set up as a random effect with one level for each `y`.
+associated with `y` values serve as the only source of residual
+variation, but that is not typically the case. If each `y` came from a
+large sample size in the previous studies, the standard errors would be
+small, but we would still expect study-level variation around any
+regression line because the world is noisy. That study-level variation,
+i.e. additional residual variation, is set up as a random effect with
+one level for each `y`.
 
 By using `y ~ x`, we included a linear term for `x` directly (manually),
 and thus we needed to set `manual_fixed = TRUE`. Otherwise
-`splinemixmeta` would have extracted a linear term from the spline setup
-and included it in the model, and we don’t want it duplicated. In the
-`summary` output, we see the full covariance matrix from the spline
-random effect, which is the vector spline coefficients. This is shown as
-the standard deviation for each component (all the same) and their
-correlations (all 0), reflecting a covariance matrix that is a constant
-times an identity matrix.
+`splinemixmeta` would have obtained a linear term from the spline setup
+and included it in the model, and we don’t want it duplicated. (Such a
+linear term, or more generally unpenalized dimensions of the spline
+coefficients, will always be removed from the smooth term when it is
+converted into the format of a random effect.) In the `summary` output,
+we see the full covariance matrix from the spline random effect, which
+is the vector spline coefficients. This is shown as the standard
+deviation for each component (all the same) and their correlations (all
+0), reflecting a covariance matrix that is a constant times an identity
+matrix. It has this structure because the random effects structure from
+the spline basis functions and penalty matrix are rotated on order to
+work with a diagonal covariance matrix.
 
 Finally we see the estimated standard deviation between groups and the
 estimated residual standard deviation, shows as the `~1 | ID` term.
@@ -211,7 +219,8 @@ errors), or “residual”, in which case only variance from random effects
 is included. The default is “outcome”. See
 [`help(predict.splinemixmeta)`](https://fawda123.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
 for details. Any further fine-grained control (such as including one
-spline but not another), can be done by calling `splinemixmeta::blup()`
+spline but not another), can be done by calling
+[`splinemixmeta::blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html)
 directly.
 
 Here are two versions of predictions:
@@ -219,9 +228,7 @@ Here are two versions of predictions:
 ``` r
 pred_spline_only <- predict(smm, include_smooths = TRUE, include_REs = FALSE, include_residuals = FALSE, type = "outcome")
 pred_spline_and_groups <- predict(smm, include_smooths = TRUE, include_REs = TRUE, include_residuals = FALSE, type = "outcome")
-message("Need to fix case with level=0")
-#> Need to fix case with level=0
-# pred_fixed_only <- predict(smm, include_smooths = FALSE)
+# look at both together
 head(cbind(pred_spline_only, pred_spline_and_groups))
 #>       blup        se      vcov     blup        se      vcov
 #> 1 19.01618 0.3506960 0.1229877 18.74330 0.4357595 0.1898863
@@ -230,7 +237,16 @@ head(cbind(pred_spline_only, pred_spline_and_groups))
 #> 4 19.25014 0.5170299 0.2673199 18.97727 0.5765052 0.3323583
 #> 5 18.31537 0.3538785 0.1252300 18.04249 0.4386054 0.1923747
 #> 6 14.81859 0.3818512 0.1458104 15.43221 0.4673896 0.2184530
-# blup(smm, level=0, vcov = TRUE, se = TRUE)
+# look at only fixed effect, which could be done with `predict`
+# but here we illustrate a direct call to `blup`
+blup(smm, level=0, vcov = TRUE, se = TRUE) |> head()
+#>       blup        se       vcov
+#> 1 17.52867 0.2001708 0.04006835
+#> 2 14.80961 0.1982734 0.03931235
+#> 3 14.06172 0.2192172 0.04805620
+#> 4 20.57627 0.3187314 0.10158973
+#> 5 17.33722 0.1958174 0.03834447
+#> 6 13.54724 0.2373041 0.05631323
 ```
 
 ### Figures
@@ -239,7 +255,13 @@ head(cbind(pred_spline_only, pred_spline_and_groups))
 suggested package `ggplot2` is needed.
 
 ``` r
-plot(smm, xvar = x, xlab = "x", ylab = "y", title = "Spline meta-regression fit")
+plot(smm, ylab = "y", title = "Spline meta-regression fit")
 ```
 
 ![](splinemixmeta_files/figure-html/unnamed-chunk-6-1.png)
+
+In this figure, the `y` values are shown with approximate 95% confidence
+intervals calculated as +/- 2 standard errors, from the standard errors
+that were input as the `se` argument to `splinemixmeta`. The fitted line
+by default includes fixed effects and spline terms (blups), with a 95%
+confidence envelope.

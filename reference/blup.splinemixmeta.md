@@ -5,7 +5,8 @@ Obtain predictions (BLUPs) from a `splinemixmeta` object
 ## Usage
 
 ``` r
-blup.splinemixmeta(
+# S3 method for class 'splinemixmeta'
+blup(
   object,
   se = FALSE,
   pi = FALSE,
@@ -78,7 +79,6 @@ standard errors, prediction intervals, and variance-covariance matrices.
 ## Details
 
 This function is modified from
-[`mixmeta::blup.mixmeta`](https://rdrr.io/pkg/mixmeta/man/blup.mixmeta.html)
+[`mixmeta::blup.mixmeta()`](https://rdrr.io/pkg/mixmeta/man/blup.mixmeta.html)
 with acknowledgement of the original authors. It is modified to handle
-intermediate levels of random effects more carefully. This is currently
-a temporary solution that may be replaced in future versions.
+intermediate levels of random effects more carefully.

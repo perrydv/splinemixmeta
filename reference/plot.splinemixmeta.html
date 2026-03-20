@@ -63,23 +63,24 @@
 
 
 <dt id="arg-xvar">xvar<a class="anchor" aria-label="anchor" href="#arg-xvar"></a></dt>
-<dd><p>xvar name of variable to plot on the horizontal axis.</p></dd>
+<dd><p>name of the variable to plot on the horizontal axis. If missing, this will
+will be taken from the right side of the fixed effects formula.</p></dd>
 
 
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
-<dd><p>title to add to the plot</p></dd>
+<dd><p>to add to the plot</p></dd>
 
 
 <dt id="arg-xlab">xlab<a class="anchor" aria-label="anchor" href="#arg-xlab"></a></dt>
-<dd><p>xlab label for the horizontal axis</p></dd>
+<dd><p>label for the horizontal axis</p></dd>
 
 
 <dt id="arg-ylab">ylab<a class="anchor" aria-label="anchor" href="#arg-ylab"></a></dt>
-<dd><p>ylab label for the vertical axis</p></dd>
+<dd><p>label for the vertical axis</p></dd>
 
 
 <dt id="arg-ylim">ylim<a class="anchor" aria-label="anchor" href="#arg-ylim"></a></dt>
-<dd><p>ylim limits for the vertical axis</p></dd>
+<dd><p>limits for the vertical axis</p></dd>
 
 
 <dt id="arg-linecolor">linecolor<a class="anchor" aria-label="anchor" href="#arg-linecolor"></a></dt>
@@ -96,15 +97,19 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>ggplot2 object</p>
+    <p><code>ggplot2</code> object</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This is not a very general plotting function. It is intended to provide a basic feature
 for visualizing a univariate <code>splinemixmeta</code> fit in a way that:</p><ul><li><p>includes fixed effects and spline terms in the predicted values, with 95% confidence bands</p></li>
-<li><p>Shows the data points with 95% confidence intervals obtains as +/- 2 times the standard errors (<code>se</code> or <code>diag(S)</code>).</p></li>
+<li><p>Shows the data points with 95% confidence intervals obtained as +/- 2 times the standard errors (<code>se</code> or <code>diag(S)</code>).</p></li>
 <li><p>returns a <code>ggplot2</code> object that can be further updated.</p></li>
-</ul></div>
+</ul><p>If the <code>x</code> object comes from a call to <code><a href="splinemixmeta.html">splinemixmeta()</a></code> that had a simple (fixed effects) <code>formula</code>, such as <code>y ~ w</code>, then
+<code>xvar</code> does not need to be provided, since it is easily determined to be <code>w</code>. However, if the
+formula was more complicated, or if <code>w</code> was not provided in <code>formula</code> because <code>manual_fixed = FALSE</code> (the default),
+then <code>xvar = "w"</code> must be provided so that this plotting function knows what to put on the horizontal axis.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

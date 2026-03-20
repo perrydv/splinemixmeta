@@ -56,7 +56,7 @@
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A fitted <code>mixmeta</code> object returned from <code>splinemixmeta</code></p></dd>
+<dd><p>A fitted <code>mixmeta</code> object returned from <code><a href="splinemixmeta.html">splinemixmeta()</a></code></p></dd>
 
 
 <dt id="arg-include-smooths">include_smooths<a class="anchor" aria-label="anchor" href="#arg-include-smooths"></a></dt>
@@ -75,7 +75,7 @@ when calling <code>splinemixmeta</code>, which should typically be the case. Typ
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>Type of predictions. This can be "outcome" or "residual" and will be passed to the <code>type</code> argument of <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">mixmeta::blup()</a></code>.</p></dd>
+<dd><p>Type of predictions. This can be "outcome" or "residual" and will be passed to the <code>type</code> argument of <code><a href="blup.splinemixmeta.html">blup.splinemixmeta()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -89,9 +89,10 @@ and "vcov" for the variance of the predictions. These are returned from <code><a
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This is a convenience function that calls <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">mixmeta::blup</a></code> without requiring you to know which random-effects "levels"
-of the fitted mixmeta object correspond to which parts of the model. For more fine-grained control (such as including one spline
-term but not another), one can use <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">mixmeta::blup()</a></code> directly.</p>
+    <p>This is a convenience function that calls <code>blup</code> (i.e. <code>blup.splinemixmeta</code>) without requiring one to know which random-effects "levels"
+of the fitted mixmeta object correspond to which parts of the model. Instead one can simply choose whether to include smooths, random effects,
+and/or residuals. For more fine-grained control (such as including one spline
+term but not another), one can use <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">blup()</a></code> directly.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

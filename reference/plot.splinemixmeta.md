@@ -27,23 +27,24 @@ plot(
 
 - xvar:
 
-  xvar name of variable to plot on the horizontal axis.
+  name of the variable to plot on the horizontal axis. If missing, this
+  will will be taken from the right side of the fixed effects formula.
 
 - title:
 
-  title to add to the plot
+  to add to the plot
 
 - xlab:
 
-  xlab label for the horizontal axis
+  label for the horizontal axis
 
 - ylab:
 
-  ylab label for the vertical axis
+  label for the vertical axis
 
 - ylim:
 
-  ylim limits for the vertical axis
+  limits for the vertical axis
 
 - linecolor:
 
@@ -60,7 +61,7 @@ plot(
 
 ## Value
 
-ggplot2 object
+`ggplot2` object
 
 ## Details
 
@@ -71,7 +72,16 @@ way that:
 - includes fixed effects and spline terms in the predicted values, with
   95% confidence bands
 
-- Shows the data points with 95% confidence intervals obtains as +/- 2
+- Shows the data points with 95% confidence intervals obtained as +/- 2
   times the standard errors (`se` or `diag(S)`).
 
 - returns a `ggplot2` object that can be further updated.
+
+If the `x` object comes from a call to
+[`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
+that had a simple (fixed effects) `formula`, such as `y ~ w`, then
+`xvar` does not need to be provided, since it is easily determined to be
+`w`. However, if the formula was more complicated, or if `w` was not
+provided in `formula` because `manual_fixed = FALSE` (the default), then
+`xvar = "w"` must be provided so that this plotting function knows what
+to put on the horizontal axis.

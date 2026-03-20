@@ -20,7 +20,8 @@ predict(
 
 - object:
 
-  A fitted `mixmeta` object returned from `splinemixmeta`
+  A fitted `mixmeta` object returned from
+  [`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
 
 - include_smooths:
 
@@ -45,7 +46,7 @@ predict(
 
   Type of predictions. This can be "outcome" or "residual" and will be
   passed to the `type` argument of
-  [`mixmeta::blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html).
+  [`blup.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/blup.splinemixmeta.md).
 
 - ...:
 
@@ -61,10 +62,10 @@ predictions. These are returned from
 
 ## Details
 
-This is a convenience function that calls
-[`mixmeta::blup`](https://rdrr.io/pkg/mixmeta/man/blup.html) without
-requiring you to know which random-effects "levels" of the fitted
-mixmeta object correspond to which parts of the model. For more
-fine-grained control (such as including one spline term but not
-another), one can use
-[`mixmeta::blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html) directly.
+This is a convenience function that calls `blup` (i.e.
+`blup.splinemixmeta`) without requiring one to know which random-effects
+"levels" of the fitted mixmeta object correspond to which parts of the
+model. Instead one can simply choose whether to include smooths, random
+effects, and/or residuals. For more fine-grained control (such as
+including one spline term but not another), one can use
+[`blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html) directly.

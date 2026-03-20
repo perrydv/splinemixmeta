@@ -2,7 +2,7 @@
 
 ## All functions
 
-- [`blup.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/blup.splinemixmeta.md)
+- [`blup(`*`<splinemixmeta>`*`)`](https://fawda123.github.io/splinemixmeta/reference/blup.splinemixmeta.md)
   :
 
   Obtain predictions (BLUPs) from a `splinemixmeta` object
