@@ -23,6 +23,10 @@ splinemixmeta(
 
 \item{formula}{A formula for the fixed effects part of the model.}
 
+\item{se}{A vector of standard errors for the response variables.}
+
+\item{S}{As an alternative to \code{se}, \code{S} can be provided in several formats to give variance-covariance information for the response variables.}
+
 \item{manual_fixed}{If \code{TRUE}, the fixed-effect component (if any) of any \code{smooth} terms is being manually included in the \code{formula} and hence
 should not be extracted from the \code{smooth}. Normally the "fixed-effect component" is the linear component. Hence one should either provide
 \code{smooth = s(x)} with \code{x} \emph{omitted} from \code{formula} (e.g. \code{formula = y} or \code{formula = y ~ 1}) and thus \code{manual_fixed = FALSE}, or provide \code{smooth = s(x)} with \code{x}
@@ -44,10 +48,6 @@ where spline formulations are set up as random effects. This simplifies catching
 \item{bscov}{See \code{\link[mixmeta:mixmeta]{mixmeta::mixmeta()}}. This is relevant only if \code{random} is provided.}
 
 \item{...}{Additional arguments passed to \code{mixmeta::mixmeta()}.'}
-
-\item{se:}{A vector of standard errors for the response variables.}
-
-\item{S:}{As an alternative to \code{se}, \code{S} can be provided in several formats to give variance-covariance information for the response variables.}
 }
 \value{
 An object of class \code{splinemixmeta}, unless there are no \code{smooth} terms, in which case an object of class \code{mixmeta} is returned.

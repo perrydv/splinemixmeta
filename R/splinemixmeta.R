@@ -2,8 +2,8 @@
 #'
 #' @param smooth A smoothing term created by `mgcv::s()`, or a list of such terms.
 #' @param formula A formula for the fixed effects part of the model.
-#' @param se: A vector of standard errors for the response variables.
-#' @param S: As an alternative to `se`, `S` can be provided in several formats to give variance-covariance information for the response variables.
+#' @param se A vector of standard errors for the response variables.
+#' @param S As an alternative to `se`, `S` can be provided in several formats to give variance-covariance information for the response variables.
 #' @param manual_fixed If `TRUE`, the fixed-effect component (if any) of any `smooth` terms is being manually included in the `formula` and hence
 #'   should not be extracted from the `smooth`. Normally the "fixed-effect component" is the linear component. Hence one should either provide
 #'   `smooth = s(x)` with `x` *omitted* from `formula` (e.g. `formula = y` or `formula = y ~ 1`) and thus `manual_fixed = FALSE`, or provide `smooth = s(x)` with `x`
