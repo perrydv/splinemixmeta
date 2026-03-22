@@ -2,6 +2,11 @@
 #' Copied from mixmeta version 1.2.2
 #' Licensed under GPL (>= 3)
 #'
+#' These functions are needed for blup.splinemixmeta, which is adapted
+#' from mixmeta::blup.mixmeta. Since the internal functions used by blup.mixmeta
+#' are not exported from package mixmeta, we copied them here so they can be
+#' used by blup.splinemixmeta.
+#'
 #' @keywords internal
 #' @noRd
 dropList <-
