@@ -1,8 +1,8 @@
 # splinemixmeta
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/fawda123/splinemixmeta/workflows/R-CMD-check/badge.svg)](https://github.com/fawda123/splinemixmeta/actions/workflows/R-CMD-check.yaml)
-[![pkgdown](https://github.com/fawda123/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/fawda123/splinemixmeta/actions/workflows/pkgdown.yaml)
+[![R-CMD-check](https://github.com/perrydv/splinemixmeta/workflows/R-CMD-check/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/perrydv/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta
@@ -23,8 +23,8 @@ Please report any issues (bugs or errors) on the [issues link](https://github.co
 
 ## Contributing 
 
-Please view our [contributing](https://github.com/fawda123/splinemixmeta/blob/master/.github/CONTRIBUTING.md) guidelines for any changes or pull requests.
+Please view our [contributing](https://github.com/perrydv/splinemixmeta/blob/master/.github/CONTRIBUTING.md) guidelines for any changes or pull requests.
 
 ## Code of Conduct
 
-Please note that the splinemixmeta project is released with a [Contributor Code of Conduct](https://fawda123.github.io/splinemixmeta/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+Please note that the splinemixmeta project is released with a [Contributor Code of Conduct](https://perrydv.github.io/splinemixmeta/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
