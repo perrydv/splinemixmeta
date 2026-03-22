@@ -68,5 +68,5 @@ advice.
 
 Please note that the splinemixmeta project is released with a
 [Contributor Code of
-Conduct](https://fawda123.github.io/splinemixmeta/CODE_OF_CONDUCT.md).
-By contributing to this project you agree to abide by its terms.
+Conduct](https://perrydv.github.io/splinemixmeta/CODE_OF_CONDUCT.md). By
+contributing to this project you agree to abide by its terms.

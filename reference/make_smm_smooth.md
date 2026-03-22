@@ -1,7 +1,7 @@
 # Create random effects and fixed effects specifications from an mgcv smooth term for use in `splinemixmeta`.
 
 This function is for internal use by
-[`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md).
+[`splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md).
 
 ## Usage
 
@@ -71,4 +71,4 @@ may be (typically will be) also re-scaled, and it is not particularly
 easy to determine the scaling factor. Hence, one may prefer to set
 `manual_fixed=FALSE` and provide the linear term directly in the
 `formula` argument to
-[`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md).
+[`splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md).

@@ -21,7 +21,7 @@ predict(
 - object:
 
   A fitted `mixmeta` object returned from
-  [`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
+  [`splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md)
 
 - include_smooths:
 
@@ -46,7 +46,7 @@ predict(
 
   Type of predictions. This can be "outcome" or "residual" and will be
   passed to the `type` argument of
-  [`blup.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/blup.splinemixmeta.md).
+  [`blup.splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/blup.splinemixmeta.md).
 
 - ...:
 

@@ -2,4 +2,4 @@
 
 ### Get Started
 
-- [splinemixmeta](https://fawda123.github.io/splinemixmeta/articles/splinemixmeta.md):
+- [splinemixmeta](https://perrydv.github.io/splinemixmeta/articles/splinemixmeta.md):

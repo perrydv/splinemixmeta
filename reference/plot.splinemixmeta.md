@@ -57,7 +57,7 @@ plot(
 - ...:
 
   additional arguments passed to
-  [`predict.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
+  [`predict.splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
 
 ## Value
 
@@ -78,7 +78,7 @@ way that:
 - returns a `ggplot2` object that can be further updated.
 
 If the `x` object comes from a call to
-[`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
+[`splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md)
 that had a simple (fixed effects) `formula`, such as `y ~ w`, then
 `xvar` does not need to be provided, since it is easily determined to be
 `w`. However, if the formula was more complicated, or if `w` was not

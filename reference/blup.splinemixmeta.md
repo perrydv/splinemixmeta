@@ -25,7 +25,7 @@ blup(
 - object:
 
   An object of class `splinemixmeta`, returned by
-  [`splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md).
+  [`splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md).
 
 - se:
 

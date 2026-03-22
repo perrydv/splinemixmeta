@@ -34,7 +34,7 @@ currently produce good results. One can have multiple spline components,
 although this is rather limited because most of the choices in `mgcv`
 for bivariate splines are not among those supported. It is possible that
 `bs = 'mrf'` also works, but it has not been tested. See
-[`help(splinemixmeta)`](https://fawda123.github.io/splinemixmeta/reference/splinemixmeta.md)
+[`help(splinemixmeta)`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md)
 for more about what is supported.
 
 The estimation machinery is not particularly efficient and so may be
@@ -217,7 +217,7 @@ predictions can be of type “outcome”, in which case variance from fixed
 effects terms is included in the prediction variance (and standard
 errors), or “residual”, in which case only variance from random effects
 is included. The default is “outcome”. See
-[`help(predict.splinemixmeta)`](https://fawda123.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
+[`help(predict.splinemixmeta)`](https://perrydv.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
 for details. Any further fine-grained control (such as including one
 spline but not another), can be done by calling
 [`splinemixmeta::blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html)

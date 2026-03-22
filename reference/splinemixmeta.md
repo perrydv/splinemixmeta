@@ -138,22 +138,22 @@ relevant.
 
 ## See also
 
-- [`predict.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
+- [`predict.splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/predict.splinemixmeta.md)
   for predictions based on BLUPs (best linear unbiased predictors) from
   fitted `splinemixmeta` models. This is an S3 method that will be
   called from `predict(x)` where `x` is a `splinemixmeta` object.
 
-- [`plot.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/plot.splinemixmeta.md)
+- [`plot.splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/plot.splinemixmeta.md)
   for plotting fitted spline meta-regression models. This is an S3
   method that will be called from `plot(x)` where `x` is a
   `splinemixmeta` object.
 
-- [`blup.splinemixmeta()`](https://fawda123.github.io/splinemixmeta/reference/blup.splinemixmeta.md)
+- [`blup.splinemixmeta()`](https://perrydv.github.io/splinemixmeta/reference/blup.splinemixmeta.md)
   for obtaining BLUPs (best linear unbiased predictors) from fitted
   `splinemixmeta` models. This is used by `predict.splinemixmeta`, which
   is typically easier to call directly. This is an S3 method that will
   be called from `blup(x)` where `x` is a `splinemixmeta` object.
 
-- [`make_smm_smooth()`](https://fawda123.github.io/splinemixmeta/reference/make_smm_smooth.md)
+- [`make_smm_smooth()`](https://perrydv.github.io/splinemixmeta/reference/make_smm_smooth.md)
   for the internal function that sets up spline terms for use in
   `splinemixmeta`.

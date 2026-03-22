@@ -22,12 +22,12 @@ repository.
 ## Contributing
 
 Please view our
-[contributing](https://github.com/fawda123/splinemixmeta/blob/master/.github/CONTRIBUTING.md)
+[contributing](https://github.com/perrydv/splinemixmeta/blob/master/.github/CONTRIBUTING.md)
 guidelines for any changes or pull requests.
 
 ## Code of Conduct
 
 Please note that the splinemixmeta project is released with a
 [Contributor Code of
-Conduct](https://fawda123.github.io/splinemixmeta/CODE_OF_CONDUCT.html).
+Conduct](https://perrydv.github.io/splinemixmeta/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
