@@ -27,13 +27,13 @@ estimating the model. Variance parameters are always estimated by REML
 (restricted maximum likelihood).
 
 There are some important limits on what will work. At the moment, the
-only recommended spline basis functions are `bs="cr"`, “bs=`cs`”, and
+only recommended spline basis functions are `bs="cr"`, `bs="cs"`, and
 `bs="cc"`. These are supported because the associated covariance
 matrices can be diagonalized. The `mgcv` default of `bs="tp"` does not
 currently produce good results. One can have multiple spline components,
 although this is rather limited because most of the choices in `mgcv`
 for bivariate splines are not among those supported. It is possible that
-`bs = 'mrf'` also works, but it has not been tested. See
+`bs = "mrf"` also works, but it has not been tested. See
 [`help(splinemixmeta)`](https://perrydv.github.io/splinemixmeta/reference/splinemixmeta.md)
 for more about what is supported.
 
@@ -45,7 +45,8 @@ notably slow for large models.
 Here we give a simulated example. Say we have `n=50` values, with 5
 values from each of 10 groups, with a sinusoidal relationship between
 `y` and `x` to provide a simple nonlinear example. The groups will be
-treated as random effects, as will the spline.
+treated as random effects, as will the spline. The simplest case would
+not have groups, but here we illustrate a case that does.
 
 ### Data simulation
 
@@ -70,11 +71,12 @@ plot(y ~ x, data = data, col = group, pch = 19, main = "Simulated data (color = 
 
 This data simulation has the following pieces:
 
-- We have 10 groups of 5 data points each. Since the `x` values are all
-  drawn independently, the groups are independent from `x`.
+- We have 10 groups of 5 data points each. (Since the `x` values are all
+  drawn independently, the groups are independent from `x`.)
 - `x` is uniformly distributed from 0 to 20.
 - We assume each `y` was obtained separately from a previous study, and
-  these studies are grouped in some relevant way.
+  these studies are grouped in some relevant way (e.g. from the same
+  study region or same lab).
 - Fixed effects for `y` include an intercept and linear term.
 - Random effects for `y` include the group effects.
 - The sinusoidal term for `y` will be estimated as a spline, treated as
@@ -183,15 +185,15 @@ linear term, or more generally unpenalized dimensions of the spline
 coefficients, will always be removed from the smooth term when it is
 converted into the format of a random effect.) In the `summary` output,
 we see the full covariance matrix from the spline random effect, which
-is the vector spline coefficients. This is shown as the standard
+is the vector of spline coefficients. This is shown as the standard
 deviation for each component (all the same) and their correlations (all
 0), reflecting a covariance matrix that is a constant times an identity
 matrix. It has this structure because the random effects structure from
-the spline basis functions and penalty matrix are rotated on order to
+the spline basis functions and penalty matrix are rotated in order to
 work with a diagonal covariance matrix.
 
 Finally we see the estimated standard deviation between groups and the
-estimated residual standard deviation, shows as the `~1 | ID` term.
+estimated residual standard deviation, shown as the `~1 | ID` term.
 
 (If the default names `all` or `ID` are already used in the data set,
 `splinemixmeta` will choose different names.)
@@ -200,12 +202,11 @@ estimated residual standard deviation, shows as the `~1 | ID` term.
 
 Predictions can be obtained at multiple levels of the random effects.
 The `predict` function for `splinemixmeta` objects simplifies this by
-allowing the simple choices of including any spline terms (default
-`TRUE`), other random effects (default `FALSE` but possibly of interest)
-and residuals (default `FALSE` and typically not of interest).
-Predictions will come with columns for standard errors and variances
-(simply the squared standard errors). The machinery for predictions is
-modified from
+allowing the choices of including any spline terms (default `TRUE`),
+other random effects (default `FALSE` but possibly of interest) and
+residuals (default `FALSE` and typically not of interest). Predictions
+will come with columns for standard errors and variances (squared
+standard errors). The machinery for predictions is modified from
 [`mixmeta::blup()`](https://rdrr.io/pkg/mixmeta/man/blup.html), where
 “blup” means “best linear unbiased predictor”, a standard term in linear
 mixed effects modeling. Hence the column of predictions returned by

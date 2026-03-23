@@ -89,13 +89,13 @@ parameters are always estimated by REML (restricted maximum
 likelihood).</p>
 <p>There are some important limits on what will work. At the moment, the
 only recommended spline basis functions are <code>bs="cr"</code>,
-“bs=<code>cs</code>”, and <code>bs="cc"</code>. These are supported
+<code>bs="cs"</code>, and <code>bs="cc"</code>. These are supported
 because the associated covariance matrices can be diagonalized. The
 <code>mgcv</code> default of <code>bs="tp"</code> does not currently
 produce good results. One can have multiple spline components, although
 this is rather limited because most of the choices in <code>mgcv</code>
 for bivariate splines are not among those supported. It is possible that
-<code>bs = 'mrf'</code> also works, but it has not been tested. See
+<code>bs = "mrf"</code> also works, but it has not been tested. See
 <code><a href="../reference/splinemixmeta.html">help(splinemixmeta)</a></code> for more about what is supported.</p>
 <p>The estimation machinery is not particularly efficient and so may be
 notably slow for large models.</p>
@@ -107,7 +107,8 @@ notably slow for large models.</p>
 values, with 5 values from each of 10 groups, with a sinusoidal
 relationship between <code>y</code> and <code>x</code> to provide a
 simple nonlinear example. The groups will be treated as random effects,
-as will the spline.</p>
+as will the spline. The simplest case would not have groups, but here we
+illustrate a case that does.</p>
 <div class="section level3">
 <h3 id="data-simulation">Data simulation<a class="anchor" aria-label="anchor" href="#data-simulation"></a>
 </h3>
@@ -129,13 +130,14 @@ as will the spline.</p>
 <p><img src="splinemixmeta_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
 <p>This data simulation has the following pieces:</p>
 <ul>
-<li>We have 10 groups of 5 data points each. Since the <code>x</code>
+<li>We have 10 groups of 5 data points each. (Since the <code>x</code>
 values are all drawn independently, the groups are independent from
-<code>x</code>.</li>
+<code>x</code>.)</li>
 <li>
 <code>x</code> is uniformly distributed from 0 to 20.</li>
 <li>We assume each <code>y</code> was obtained separately from a
-previous study, and these studies are grouped in some relevant way.</li>
+previous study, and these studies are grouped in some relevant way
+(e.g. from the same study region or same lab).</li>
 <li>Fixed effects for <code>y</code> include an intercept and linear
 term.</li>
 <li>Random effects for <code>y</code> include the group effects.</li>
@@ -240,14 +242,14 @@ more generally unpenalized dimensions of the spline coefficients, will
 always be removed from the smooth term when it is converted into the
 format of a random effect.) In the <code>summary</code> output, we see
 the full covariance matrix from the spline random effect, which is the
-vector spline coefficients. This is shown as the standard deviation for
-each component (all the same) and their correlations (all 0), reflecting
-a covariance matrix that is a constant times an identity matrix. It has
-this structure because the random effects structure from the spline
-basis functions and penalty matrix are rotated on order to work with a
-diagonal covariance matrix.</p>
+vector of spline coefficients. This is shown as the standard deviation
+for each component (all the same) and their correlations (all 0),
+reflecting a covariance matrix that is a constant times an identity
+matrix. It has this structure because the random effects structure from
+the spline basis functions and penalty matrix are rotated in order to
+work with a diagonal covariance matrix.</p>
 <p>Finally we see the estimated standard deviation between groups and
-the estimated residual standard deviation, shows as the
+the estimated residual standard deviation, shown as the
 <code>~1 | ID</code> term.</p>
 <p>(If the default names <code>all</code> or <code>ID</code> are already
 used in the data set, <code>splinemixmeta</code> will choose different
@@ -258,12 +260,12 @@ names.)</p>
 </h3>
 <p>Predictions can be obtained at multiple levels of the random effects.
 The <code>predict</code> function for <code>splinemixmeta</code> objects
-simplifies this by allowing the simple choices of including any spline
-terms (default <code>TRUE</code>), other random effects (default
+simplifies this by allowing the choices of including any spline terms
+(default <code>TRUE</code>), other random effects (default
 <code>FALSE</code> but possibly of interest) and residuals (default
 <code>FALSE</code> and typically not of interest). Predictions will come
-with columns for standard errors and variances (simply the squared
-standard errors). The machinery for predictions is modified from
+with columns for standard errors and variances (squared standard
+errors). The machinery for predictions is modified from
 <code><a href="https://rdrr.io/pkg/mixmeta/man/blup.html" class="external-link">mixmeta::blup()</a></code>, where “blup” means “best linear unbiased
 predictor”, a standard term in linear mixed effects modeling. Hence the
 column of predictions returned by <code>predict</code> is labeled
