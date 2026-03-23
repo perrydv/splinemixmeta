@@ -4,13 +4,13 @@ Version: 1.0.0
 Authors@R: c(
     person(given = "Perry",
       family = "de Valpine",
-      role = c("aut", "cre"),
+      role = c("aut"),
       email = "pdevalpine@berkeley.edu",
       comment = c(ORCID = "0000-0002-8329-6796")
     ),
     person(given = "Marcus",
       family = "Beck",
-      role = c("aut"),
+      role = c("aut", "cre"),
       email = "mbeck@tbep.org",
       comment = c(ORCID = "0000-0002-4996-0059")
     )
