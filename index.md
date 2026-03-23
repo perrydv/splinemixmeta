@@ -1,7 +1,8 @@
 # splinemixmeta
 
 Non-parametric meta-regression using splines from mgcv with
-mixed-effects meta-analysis from mixmeta
+mixed-effects meta-analysis from mixmeta, see the package website
+[here](https://perrydv.github.io/splinemixmeta/).
 
 Install the package from GitHub:
 
