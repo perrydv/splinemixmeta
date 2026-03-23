@@ -5,7 +5,7 @@
 [![pkgdown](https://github.com/perrydv/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
-Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta, see the package website [here](https://perrydv.github.io/splinemixmeta/).
+Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta. See the package website [here](https://perrydv.github.io/splinemixmeta/).
 
 Install the package from GitHub: 
 
