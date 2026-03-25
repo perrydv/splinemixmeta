@@ -16,10 +16,10 @@ Authors@R: c(
     )
   )
 Description: Fit additive mixed meta-analysis (AMMA) models, extending
-  the mixmeta package <https://cran.r-project.org/package=mixmeta> 
+  the 'mixmeta' package <https://cran.r-project.org/package=mixmeta> 
   to allow for spline-based meta-regression. Functions combine features of 
-  mgcv <https://cran.r-project.org/package=mgcv> for building spline 
-  components and mixmeta for estimating general mixed-effects meta-analysis 
+  'mgcv' <https://cran.r-project.org/package=mgcv> for building spline 
+  components and 'mixmeta' for estimating general mixed-effects meta-analysis 
   models.
 License: GPL (>= 3)
 Encoding: UTF-8

@@ -1,3 +1,9 @@
+## Resubmission
+
+Added single quotes for software names in Description field of DESCRIPTION file.
+
+Additional request to reference the method will be deferred to a future release since the paper is in the final stage of revision.
+
 ## Test environments
 
 * ubuntu 24.04.3 (on GitHub Actions), R release, devel, and old-release
