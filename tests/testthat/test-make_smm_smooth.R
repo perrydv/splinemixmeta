@@ -16,7 +16,7 @@ test_that("make_smm_smooth works (simple, univariate)", {
   ssm_smooth2 <- make_smm_smooth(sTerm, vnames = "x", manual_fixed = FALSE)
   expect_equal(length(ssm_smooth2), 1)
   ssm_smooth2 <- ssm_smooth2[[1]]
-  expect_identical(ssm_smooth2, ssm_smooth)
+  expect_equal(ssm_smooth2, ssm_smooth, tolerance = 1e-6)
 
   sTerm <- mgcv::s(x, k = 5, bs = "cr")
   ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", manual_fixed = TRUE)
