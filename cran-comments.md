@@ -1,8 +1,6 @@
 ## Resubmission
 
-Added single quotes for software names in Description field of DESCRIPTION file.
-
-Additional request to reference the method will be deferred to a future release since the paper is in the final stage of revision.
+Update for test failures noted here <https://www.stats.ox.ac.uk/pub/bdr/Rblas/MKL/splinemixmeta.out>.  We have updated tests to account for slight differences in numerical precision from different approximation methods, MKL in particular.
 
 ## Test environments
 
@@ -13,6 +11,4 @@ Additional request to reference the method will be deferred to a future release 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* This is a new submission.
+0 errors | 0 warnings | 0 notes
