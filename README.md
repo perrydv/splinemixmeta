@@ -3,6 +3,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/perrydv/splinemixmeta/workflows/R-CMD-check/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/perrydv/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/pkgdown.yaml)
+[![DOI](https://zenodo.org/badge/1141381021.svg)](https://doi.org/10.5281/zenodo.19402409)
 <!-- badges: end -->
 
 Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta. See the package website [here](https://perrydv.github.io/splinemixmeta/).
