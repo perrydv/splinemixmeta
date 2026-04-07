@@ -1,6 +1,6 @@
 ## Resubmission
 
-Update for test failures noted here <https://www.stats.ox.ac.uk/pub/bdr/Rblas/MKL/splinemixmeta.out>.  We have updated tests to account for slight differences in numerical precision from different approximation methods, MKL in particular.
+Additional fix to package tests to address error noted here <https://www.stats.ox.ac.uk/pub/bdr/Rblas/MKL/splinemixmeta.out>.  We have tested the package on R-hub's MKL platform, but did not reproduce the error.
 
 ## Test environments
 
@@ -8,6 +8,7 @@ Update for test failures noted here <https://www.stats.ox.ac.uk/pub/bdr/Rblas/MK
 * macOS (on GitHub Actions), R release
 * windows (on GitHub Actions), R release
 * win-builder http://win-builder.r-project.org/, R release, devel, and old-release
+* R-hub - various
 
 ## R CMD check results
 
