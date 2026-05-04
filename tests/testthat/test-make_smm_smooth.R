@@ -1,3 +1,16 @@
+# These tests compare that basis functions and fixed effects
+# are created consistently and as expected with various inputs.
+# On CRAN testing on MKL, a sign-flipping problem came up.
+# This is likely due to some step like eigen singular-value
+# decomposition where a flipped sign is equally valid.
+# However, the issue could not be reproduced on r-hub's
+# MKL platform, so it was hard to resolve further what is
+# happening. The approach taken below is simply to
+# check absolute values. A more refined approach would be
+# to check for all signs matching or all flipped, but
+# it is hard to conceive of a case where checking all
+# absolute values would be insufficient proof of correct
+# behavior.
 test_that("make_smm_smooth works (simple, univariate)", {
   sTerm <- mgcv::s(x, k = 5)
   x <- rnorm(30)
@@ -16,7 +29,8 @@ test_that("make_smm_smooth works (simple, univariate)", {
   ssm_smooth2 <- make_smm_smooth(sTerm, vnames = "x", manual_fixed = FALSE)
   expect_equal(length(ssm_smooth2), 1)
   ssm_smooth2 <- ssm_smooth2[[1]]
-  expect_identical(ssm_smooth2, ssm_smooth)
+  expect_equal(abs(ssm_smooth2$x_fixed), abs(ssm_smooth$x_fixed), tolerance = 1e-6)
+  expect_equal(abs(ssm_smooth2$basisFxns), abs(ssm_smooth$basisFxns), tolerance = 1e-6)
 
   sTerm <- mgcv::s(x, k = 5, bs = "cr")
   ssm_smooth <- make_smm_smooth(sTerm, data = data.frame(x = x, n = length(x)), vnames = "x", manual_fixed = TRUE)

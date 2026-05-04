@@ -5,9 +5,10 @@
 [![pkgdown](https://github.com/perrydv/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/pkgdown.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/splinemixmeta)](https://CRAN.R-project.org/package=splinemixmeta)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/splinemixmeta)](https://cran.r-project.org/package=splinemixmeta)
+[![DOI](https://zenodo.org/badge/1141381021.svg)](https://doi.org/10.5281/zenodo.19402409)
 <!-- badges: end -->
 
-Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta, see the package website [here](https://perrydv.github.io/splinemixmeta/).
+Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta. See the package website [here](https://perrydv.github.io/splinemixmeta/).
 
 Install the package from CRAN:
 
