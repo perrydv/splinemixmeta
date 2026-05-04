@@ -2,6 +2,8 @@
 
 ## splinemixmeta 1.0.1
 
+CRAN release: 2026-04-08
+
 - Slight update to tests to account for differences in numerical
   precision from different approximation methods.
 

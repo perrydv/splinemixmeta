@@ -51,6 +51,7 @@ not have groups, but here we illustrate a case that does.
 ### Data simulation
 
 ``` r
+
 set.seed(1)
 n <- 50
 num_groups <- 10
@@ -94,6 +95,7 @@ This data simulation has the following pieces:
 The spline meta-regression model can be estimated like this:
 
 ``` r
+
 library(splinemixmeta)
 smm <- splinemixmeta( mgcv::s(x, bs = "cr"), y ~ x, 
                       se = se, manual_fixed = TRUE, 
@@ -104,6 +106,7 @@ The object `smm` will have class “splinemixmeta” and “mixmeta”. First we
 can look at a summary of the model:
 
 ``` r
+
 summary(smm)
 #> Call:  mixmeta::mixmeta(formula = y ~ x, S = (se)^2, data = data, random = list(
 #>     ~basisFxns_A - 1 | all, ~1 | group, ~1 | ID), bscov = c("id", 
@@ -227,6 +230,7 @@ directly.
 Here are two versions of predictions:
 
 ``` r
+
 pred_spline_only <- predict(smm, include_smooths = TRUE, include_REs = FALSE, include_residuals = FALSE, type = "outcome")
 pred_spline_and_groups <- predict(smm, include_smooths = TRUE, include_REs = TRUE, include_residuals = FALSE, type = "outcome")
 # look at both together
@@ -256,6 +260,7 @@ blup(smm, level=0, vcov = TRUE, se = TRUE) |> head()
 suggested package `ggplot2` is needed.
 
 ``` r
+
 plot(smm, ylab = "y", title = "Spline meta-regression fit")
 ```
 

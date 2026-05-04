@@ -4,14 +4,29 @@ Non-parametric meta-regression using splines from mgcv with
 mixed-effects meta-analysis from mixmeta. See the package website
 [here](https://perrydv.github.io/splinemixmeta/).
 
-Install the package from GitHub:
+Install the package from CRAN:
 
 ``` r
+
+# Install the package from CRAN
+install.packages("splinemixmeta")
+
+# Load the package once installed
+library(splinemixmeta)
+```
+
+Alternatively, install the package from GitHub:
+
+``` r
+
 # Install the remotes package if you haven't already
 install.packages("remotes")
 
 # Install the package from GitHub
 remotes::install_github("perrydv/splinemixmeta")
+
+# Load the package once installed
+library(splinemixmeta)
 ```
 
 ## Issues and help
