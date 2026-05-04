@@ -3,11 +3,23 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/perrydv/splinemixmeta/workflows/R-CMD-check/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/perrydv/splinemixmeta/workflows/pkgdown/badge.svg)](https://github.com/perrydv/splinemixmeta/actions/workflows/pkgdown.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/splinemixmeta)](https://CRAN.R-project.org/package=splinemixmeta)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/splinemixmeta)](https://cran.r-project.org/package=splinemixmeta)
 <!-- badges: end -->
 
 Non-parametric meta-regression using splines from mgcv with mixed-effects meta-analysis from mixmeta, see the package website [here](https://perrydv.github.io/splinemixmeta/).
 
-Install the package from GitHub: 
+Install the package from CRAN:
+
+```r
+# Install the package from CRAN
+install.packages("splinemixmeta")
+
+# Load the package once installed
+library(splinemixmeta)
+```
+
+Alternatively, install the package from GitHub: 
 
 ```r
 # Install the remotes package if you haven't already
@@ -15,6 +27,9 @@ install.packages("remotes")
 
 # Install the package from GitHub
 remotes::install_github("perrydv/splinemixmeta")
+
+# Load the package once installed
+library(splinemixmeta)
 ```
 
 ## Issues and help 
